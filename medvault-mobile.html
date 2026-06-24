@@ -1042,30 +1042,37 @@ html, body {
   font-family: 'Inter', sans-serif;
 }
 
-/* Each screen = fixed-size flex column that fills the viewport */
+/* Each screen = fixed-size flex column that fills the viewport exactly */
 .phone-screen {
   width: 100%;
   height: 100vh;
   height: 100dvh;
+  min-height: unset !important;  /* kill the desktop min-height:720px — critical on small phones */
+  max-height: 100vh;
+  max-height: 100dvh;
   display: none;
   flex-direction: column;
-  overflow: hidden;       /* clip — inner body does the scrolling */
+  overflow: hidden;               /* clip at viewport edge — inner body scrolls */
   position: relative;
 }
 .phone-screen.active { display: flex; }
 
 /* ── ALL SCREEN BODY AREAS SCROLL ── */
-/* Topbar + CTA pin naturally as flex siblings; only the body scrolls */
+/* min-height:0 is the CRITICAL fix: without it, flex children refuse to shrink
+   below their content size, so overflow-y:auto never kicks in (the content
+   just overflows the screen and gets clipped by the parent overflow:hidden).
+   With min-height:0, the body can shrink to the available space and scroll. */
 .s1-body,
 .s2-body,
 .s3-body,
 .s4-body,
 .s5-body {
   flex: 1;
+  min-height: 0;                  /* THE flex-scroll fix */
   overflow-y: auto;
   overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
-  overscroll-behavior: contain;
+  overscroll-behavior-y: contain;
 }
 
 /* Thin purple scrollbar on supporting browsers */
@@ -1080,9 +1087,9 @@ html, body {
 .s4-body::-webkit-scrollbar-thumb,
 .s5-body::-webkit-scrollbar-thumb { background: var(--p300); border-radius: 99px; }
 
-/* Screen 3 — remove the inner med-list height cap so body scroll takes over */
+/* Screen 3 — remove inner med-list height cap so body scroll takes over */
 .med-list { max-height: none !important; overflow-y: visible !important; }
-/* Screen 3 — s3-body was set overflow:hidden in the base CSS; override */
+/* Screen 3 — base CSS sets overflow:hidden; override to allow scroll */
 .s3-body { overflow-y: auto !important; }
 
 /* Progress bar at top */
@@ -2640,8 +2647,9 @@ function moRenderSummary() {
 let scanTimer = null;
 
 function runScanAnimation() {
-  // reset all steps to pending
-  clearTimeout(scanTimer);
+  // cancel ALL pending scan timers (not just the last one)
+  if (window._scanTimers) window._scanTimers.forEach(clearTimeout);
+  window._scanTimers = [];
   [1,2,3,4].forEach(i => {
     const icon  = document.getElementById('sicon-' + i);
     const check = document.getElementById('scheck-' + i);
@@ -2674,7 +2682,7 @@ function runScanAnimation() {
   ];
 
   steps.forEach(([delay, idx, cls, icon, sub, pct, progLabel, title, subtitle, markDone]) => {
-    scanTimer = setTimeout(() => {
+    window._scanTimers.push(setTimeout(() => {
       const iconEl  = document.getElementById('sicon-' + idx);
       const checkEl = document.getElementById('scheck-' + idx);
       const subEl   = document.getElementById('ssub-'  + idx);
@@ -2711,7 +2719,7 @@ function runScanAnimation() {
       }
 
       lucide.createIcons();
-    }, delay);
+    }, delay));
   });
 }
 
