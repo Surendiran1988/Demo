@@ -1034,25 +1034,56 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--n900);min-h
 /* ── MOBILE RESET ── */
 html, body {
   margin: 0; padding: 0;
-  width: 100%; height: 100%;
-  overflow: hidden;
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;       /* body is the fixed viewport container */
   background: #FAF5FF;
   font-family: 'Inter', sans-serif;
 }
 
-/* Screen fills full viewport */
+/* Each screen = fixed-size flex column that fills the viewport */
 .phone-screen {
-  width: 100vw;
-  min-height: 100vh;
-  min-height: 100dvh;
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
   display: none;
   flex-direction: column;
+  overflow: hidden;       /* clip — inner body does the scrolling */
   position: relative;
+}
+.phone-screen.active { display: flex; }
+
+/* ── ALL SCREEN BODY AREAS SCROLL ── */
+/* Topbar + CTA pin naturally as flex siblings; only the body scrolls */
+.s1-body,
+.s2-body,
+.s3-body,
+.s4-body,
+.s5-body {
+  flex: 1;
   overflow-y: auto;
   overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
 }
-.phone-screen.active { display: flex; }
+
+/* Thin purple scrollbar on supporting browsers */
+.s1-body::-webkit-scrollbar,
+.s2-body::-webkit-scrollbar,
+.s3-body::-webkit-scrollbar,
+.s4-body::-webkit-scrollbar,
+.s5-body::-webkit-scrollbar { width: 3px; }
+.s1-body::-webkit-scrollbar-thumb,
+.s2-body::-webkit-scrollbar-thumb,
+.s3-body::-webkit-scrollbar-thumb,
+.s4-body::-webkit-scrollbar-thumb,
+.s5-body::-webkit-scrollbar-thumb { background: var(--p300); border-radius: 99px; }
+
+/* Screen 3 — remove the inner med-list height cap so body scroll takes over */
+.med-list { max-height: none !important; overflow-y: visible !important; }
+/* Screen 3 — s3-body was set overflow:hidden in the base CSS; override */
+.s3-body { overflow-y: auto !important; }
 
 /* Progress bar at top */
 #progress-bar-wrap {
@@ -1074,6 +1105,7 @@ html, body {
 /* Bottom safe area for CTA buttons */
 .p-cta, .p-cta-secondary {
   margin-bottom: max(20px, env(safe-area-inset-bottom, 20px));
+  flex-shrink: 0;   /* never squish CTAs */
 }
 
 </style>
@@ -1482,7 +1514,7 @@ html, body {
       </div>
 
       <!-- ── SCREEN 3: REVIEW ── -->
-      <div class="phone-screen s3" id="screen-2" style="position:relative;overflow:hidden;">
+      <div class="phone-screen s3" id="screen-2" style="position:relative;">
         <div class="p-topbar dark">
           <div class="p-back dark-btn" onclick="prevScreen()" title="Back"><i data-lucide="arrow-left"></i></div>
           <span class="p-topbar-title white">Review Medications</span>
@@ -1753,7 +1785,7 @@ html, body {
           <div class="p-back dark-btn" onclick="prevScreen()" title="Back"><i data-lucide="arrow-left"></i></div>
           <span class="p-topbar-title white" id="s4-topbar-title">Set Reminder Times</span>
         </div>
-        <div class="s4-body" style="overflow-y:auto;max-height:640px;padding-bottom:4px;">
+        <div class="s4-body" style="padding-bottom:4px;">
           <div id="reminders-content"><!-- built dynamically by buildRemindersScreen() --></div>
 
           <div class="start-date-card" onclick="openDatePicker()" style="cursor:pointer;">
@@ -2038,14 +2070,18 @@ const screenData = [
 ];
 
 function goTo(n) {
-  // hide current screen & info
+  // hide current screen
   document.getElementById('screen-' + current).classList.remove('active');
-  document.getElementById('info-' + current).style.display = 'none';
-  // update stepper
+  // info panels only exist in the desktop version — guard against null
+  const prevInfo = document.getElementById('info-' + current);
+  if (prevInfo) prevInfo.style.display = 'none';
+  // stepper only exists in the desktop version — guard against null
   const prevEl = document.getElementById('step-' + current);
-  prevEl.classList.remove('active');
-  if (n > current) prevEl.classList.add('done');
-  else prevEl.classList.remove('done');
+  if (prevEl) {
+    prevEl.classList.remove('active');
+    if (n > current) prevEl.classList.add('done');
+    else prevEl.classList.remove('done');
+  }
   if (current < total - 1) {
     const conn = document.getElementById('conn-' + current);
     if (conn) conn.classList.toggle('done', n > current);
@@ -2053,30 +2089,34 @@ function goTo(n) {
 
   current = n;
 
-  // show new screen & info
+  // show new screen
   document.getElementById('screen-' + current).classList.add('active');
-  document.getElementById('info-' + current).style.display = 'block';
-  // update stepper
+  // info panels — guard
+  const curInfo = document.getElementById('info-' + current);
+  if (curInfo) curInfo.style.display = 'block';
+  // stepper — guard
   const curEl = document.getElementById('step-' + current);
-  curEl.classList.remove('done');
-  curEl.classList.add('active');
+  if (curEl) { curEl.classList.remove('done'); curEl.classList.add('active'); }
 
-  // update buttons
-  document.getElementById('btn-prev').disabled = current === 0;
+  // nav buttons only exist in desktop — guard
+  const prevBtn = document.getElementById('btn-prev');
+  if (prevBtn) prevBtn.disabled = current === 0;
   const nextBtn = document.getElementById('btn-next');
-  if (current === total - 1) {
-    nextBtn.innerHTML = '<i data-lucide="rotate-ccw"></i> Start Over';
-    nextBtn.onclick = () => restartFlow();
-  } else {
-    nextBtn.innerHTML = 'Next <i data-lucide="arrow-right"></i>';
-    nextBtn.onclick = nextScreen;
+  if (nextBtn) {
+    if (current === total - 1) {
+      nextBtn.innerHTML = '<i data-lucide="rotate-ccw"></i> Start Over';
+      nextBtn.onclick = () => restartFlow();
+    } else {
+      nextBtn.innerHTML = 'Next <i data-lucide="arrow-right"></i>';
+      nextBtn.onclick = nextScreen;
+    }
   }
   lucide.createIcons();
 
-  // scroll phone to top
-  const screen = document.getElementById('screen-' + current);
-  const body = screen.querySelector('.s1-body, .s2-body, .s3-body, .s4-body, .s5-body');
-  if (body) body.scrollTop = 0;
+  // scroll inner body back to top on screen change
+  const screenEl = document.getElementById('screen-' + current);
+  const bodyEl = screenEl.querySelector('.s1-body, .s2-body, .s3-body, .s4-body, .s5-body');
+  if (bodyEl) bodyEl.scrollTop = 0;
 
   // kick off scan animation when entering screen 1
   if (current === 1) {
@@ -2678,10 +2718,10 @@ function runScanAnimation() {
 function nextScreen() { if (current < total - 1) goTo(current + 1); }
 function prevScreen() { if (current > 0) goTo(current - 1); }
 function restartFlow() {
-  // reset all steps
+  // reset stepper (desktop only — guard against null)
   for (let i = 0; i < total; i++) {
     const el = document.getElementById('step-' + i);
-    el.classList.remove('active','done');
+    if (el) el.classList.remove('active','done');
     const conn = document.getElementById('conn-' + i);
     if (conn) conn.classList.remove('done');
   }
