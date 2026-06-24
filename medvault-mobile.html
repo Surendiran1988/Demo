@@ -1,0 +1,3062 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<title>MedVault — Prescription Flow</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<script>
+
+// Inline Lucide icon bundle — no CDN required
+(function(){
+  var ICONS = {
+    'activity': '<polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>',
+    'alert-triangle': '<path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/>',
+    'arrow-left': '<path d="m12 19-7-7 7-7"/><path d="M19 12H5"/>',
+    'arrow-right': '<path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>',
+    'arrow-up-circle': '<circle cx="12" cy="12" r="10"/><path d="m16 12-4-4-4 4"/><path d="M12 16V8"/>',
+    'battery-full': '<rect width="16" height="10" x="2" y="7" rx="2" ry="2"/><line x1="22" x2="22" y1="11" y2="13"/>',
+    'bell': '<path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>',
+    'bell-ring': '<path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/><path d="M4 2C2.8 3.7 2 5.7 2 8"/><path d="M20 2c1.2 1.7 2 3.7 2 6"/>',
+    'brain': '<path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96-.46 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z"/><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96-.46 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2Z"/>',
+    'brain-circuit': '<path d="M12 4.5a2.5 2.5 0 0 0-4.96-.46 2.5 2.5 0 0 0-1.98 3 2.5 2.5 0 0 0-1.32 4.24 3 3 0 0 0 .34 5.58 2.5 2.5 0 0 0 2.96 3.08 2.5 2.5 0 0 0 4.96.46V4.5Z"/><path d="M12 4.5a2.5 2.5 0 0 1 4.96-.46 2.5 2.5 0 0 1 1.98 3 2.5 2.5 0 0 1 1.32 4.24 3 3 0 0 1-.34 5.58 2.5 2.5 0 0 1-2.96 3.08 2.5 2.5 0 0 1-4.96.46V4.5Z"/><path d="M12 13h4"/><path d="M12 18h6.5"/><path d="M12 8h8"/><circle cx="20" cy="13" r="1"/><circle cx="18.5" cy="18" r="1"/><circle cx="20" cy="8" r="1"/>',
+    'calendar': '<rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/>',
+    'calendar-check': '<rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/><path d="m9 16 2 2 4-4"/>',
+    'camera': '<path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/>',
+    'check': '<path d="M20 6 9 17l-5-5"/>',
+    'check-circle': '<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/>',
+    'circle-check': '<circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/>',
+    'clock': '<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>',
+    'clock-4': '<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>',
+    'cpu': '<rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><path d="M15 2v2"/><path d="M15 20v2"/><path d="M2 15h2"/><path d="M2 9h2"/><path d="M20 15h2"/><path d="M20 9h2"/><path d="M9 2v2"/><path d="M9 20v2"/>',
+    'eye': '<path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/>',
+    'file-text': '<path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/>',
+    'flask-conical': '<path d="M10 2v7.527a2 2 0 0 1-.211.896L4.72 20.55a1 1 0 0 0 .9 1.45h12.76a1 1 0 0 0 .9-1.45l-5.069-10.127A2 2 0 0 1 14 9.527V2"/><path d="M8.5 2h7"/><path d="M7 16h10"/>',
+    'folder-open': '<path d="m6 14 1.5-2.9A2 2 0 0 1 9.24 10H20a2 2 0 0 1 1.94 2.5l-1.54 6a2 2 0 0 1-1.95 1.5H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h3.9a2 2 0 0 1 1.69.9l.81 1.2a2 2 0 0 0 1.67.9H18a2 2 0 0 1 2 2v2"/>',
+    'hash': '<line x1="4" x2="20" y1="9" y2="9"/><line x1="4" x2="20" y1="15" y2="15"/><line x1="10" x2="8" y1="3" y2="21"/><line x1="16" x2="14" y1="3" y2="21"/>',
+    'heart-pulse': '<path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/><path d="M3.22 12H9.5l1.5-3 2 4.5 1.5-3h6.78"/>',
+    'help-circle': '<circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/>',
+    'history': '<path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l4 2"/>',
+    'image': '<rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/>',
+    'info': '<circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/>',
+    'keyboard': '<rect width="20" height="16" x="2" y="4" rx="2"/><path d="M6 8h.001"/><path d="M10 8h.001"/><path d="M14 8h.001"/><path d="M18 8h.001"/><path d="M8 12h.001"/><path d="M12 12h.001"/><path d="M16 12h.001"/><path d="M7 16h10"/>',
+    'layers': '<path d="m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z"/><path d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65"/><path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65"/>',
+    'layout-dashboard': '<rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/>',
+    'lock-keyhole': '<circle cx="12" cy="16" r="1"/><rect x="3" y="10" width="18" height="12" rx="2"/><path d="M7 10V7a5 5 0 0 1 10 0v3"/>',
+    'message-circle': '<path d="m3 21 1.9-5.7a8.5 8.5 0 1 1 3.8 3.8z"/>',
+    'moon': '<path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>',
+    'pencil': '<path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/>',
+    'pill': '<path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z"/><path d="m8.5 8.5 7 7"/>',
+    'plus': '<path d="M5 12h14"/><path d="M12 5v14"/>',
+    'rotate-ccw': '<path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/>',
+    'scan-line': '<path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/><line x1="7" x2="17" y1="12" y2="12"/>',
+    'shield-alert': '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/><path d="M12 8v4"/><path d="M12 16h.01"/>',
+    'shield-check': '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/><path d="m9 12 2 2 4-4"/>',
+    'shield-plus': '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/><path d="M9 12h6"/><path d="M12 9v6"/>',
+    'signal': '<path d="M2 20h.01"/><path d="M7 20v-4"/><path d="M12 20v-8"/><path d="M17 20V8"/><path d="M22 4v16"/>',
+    'sun': '<circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/>',
+    'sunrise': '<path d="M12 2v8"/><path d="m4.93 10.93 1.41 1.41"/><path d="M2 18h2"/><path d="M20 18h2"/><path d="m19.07 10.93-1.41 1.41"/><path d="M22 22H2"/><path d="m8 6 4-4 4 4"/><path d="M16 18a4 4 0 0 0-8 0"/>',
+    'sunset': '<path d="M12 10V2"/><path d="m4.93 10.93 1.41 1.41"/><path d="M2 18h2"/><path d="M20 18h2"/><path d="m19.07 10.93-1.41 1.41"/><path d="M22 22H2"/><path d="m16 6-4 4-4-4"/><path d="M16 18a4 4 0 0 0-8 0"/>',
+    'tag': '<path d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z"/><circle cx="7.5" cy="7.5" r=".5" fill="currentColor"/>',
+    'toggle-right': '<rect width="20" height="12" x="2" y="6" rx="6" ry="6"/><circle cx="16" cy="12" r="2"/>',
+    'triangle-alert': '<path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/>',
+    'upload': '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/>',
+    'user-round': '<circle cx="12" cy="8" r="5"/><path d="M20 21a8 8 0 1 0-16 0"/>',
+    'wifi': '<path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><line x1="12" x2="12.01" y1="20" y2="20"/>',
+    'x': '<path d="M18 6 6 18"/><path d="m6 6 12 12"/>',
+    'arrow-up-right': '<path d="M7 7h10v10"/><path d="M7 17 17 7"/>',
+    'book-open': '<path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>',
+    'gem': '<path d="M6 3h12l4 6-10 13L2 9Z"/><path d="M11 3 8 9l4 13 4-13-3-6"/><path d="M2 9h20"/>',
+    'heart': '<path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>',
+    'hospital': '<path d="M12 6v4"/><path d="M14 14h-4"/><path d="M14 18h-4"/><path d="M14 8h-4"/><path d="M18 12h2a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-9a2 2 0 0 1 2-2h2"/><path d="M18 22V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v18"/>',
+    'house': '<path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>',
+    'life-buoy': '<circle cx="12" cy="12" r="10"/><path d="m4.93 4.93 4.24 4.24"/><path d="m14.83 9.17 4.24-4.24"/><path d="m14.83 14.83 4.24 4.24"/><path d="m9.17 14.83-4.24 4.24"/><circle cx="12" cy="12" r="4"/>',
+    'lightbulb': '<path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/>',
+    'lock': '<rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>',
+    'mail': '<rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>',
+    'medal': '<path d="M7.21 15 2.66 7.14a2 2 0 0 1 .13-2.2L4.4 2.8A2 2 0 0 1 6 2h12a2 2 0 0 1 1.6.8l1.6 2.14a2 2 0 0 1 .14 2.2L16.79 15"/><path d="M11 12 5.12 2.2"/><path d="m13 12 5.88-9.8"/><path d="M8 7h8"/><circle cx="12" cy="17" r="5"/><path d="M12 18v-2h-.5"/>',
+    'ribbon': '<polyline points="5 7.71 5 21 12 17 19 21 19 7.71"/><path d="M12 2a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5z"/>',
+    'search': '<circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>',
+    'settings': '<path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/>',
+    'siren': '<path d="M7 18v-6a5 5 0 1 1 10 0v6"/><path d="M5 21a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-1a1 1 0 0 0-1-1H6a1 1 0 0 0-1 1v1z"/><path d="M21 12h1"/><path d="M18.5 4.5 18 5"/><path d="M2 12h1"/><path d="M12 2v1"/><path d="M5.5 4.5 6 5"/>',
+    'sparkles': '<path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/><path d="M20 3v4"/><path d="M22 5h-4"/><path d="M4 17v2"/><path d="M5 18H3"/>',
+    'trophy': '<path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2z"/>',
+  };
+
+  function svgFor(name, el) {
+    var paths = ICONS[name];
+    if (!paths) return;
+
+    // Read computed styles BEFORE the element is removed from DOM
+    var computed = (el.ownerDocument || document).defaultView.getComputedStyle(el);
+    var cw = el.style.width  || el.getAttribute('width')  || computed.width  || '24px';
+    var ch = el.style.height || el.getAttribute('height') || computed.height || '24px';
+    // Strip 'px' and fall back to 24 if not a real pixel value
+    var w = parseFloat(cw) || 24;
+    var h = parseFloat(ch) || 24;
+    // If CSS gave us 0 or auto, fall back to 24
+    if (w < 4) w = 24;
+    if (h < 4) h = 24;
+
+    var cls = el.className || '';
+    var svg = document.createElementNS('http://www.w3.org/2000/svg','svg');
+    svg.setAttribute('xmlns','http://www.w3.org/2000/svg');
+    svg.setAttribute('width',  w);
+    svg.setAttribute('height', h);
+    svg.setAttribute('viewBox','0 0 24 24');
+    svg.setAttribute('fill','none');
+    svg.setAttribute('stroke','currentColor');
+    svg.setAttribute('stroke-width','2');
+    svg.setAttribute('stroke-linecap','round');
+    svg.setAttribute('stroke-linejoin','round');
+    if (cls) svg.setAttribute('class', cls);
+
+    // Copy inline styles from <i>
+    if (el.style.cssText) svg.style.cssText = el.style.cssText;
+
+    // ── KEY FIX: inherit computed color so stroke="currentColor" renders correctly ──
+    // CSS rules targeting <i> (e.g. .scan-step-icon i { color:white }) no longer
+    // match after we swap in <svg>. Copying the computed color as an inline style
+    // preserves the intent of those rules on the replacement element.
+    var computedColor = computed.color;
+    if (computedColor && computedColor !== 'rgba(0, 0, 0, 0)') {
+      svg.style.color = computedColor;
+    }
+
+    // Preserve flex-shrink so icons inside flex rows don't stretch
+    svg.style.flexShrink = '0';
+    svg.style.display = svg.style.display || 'inline-block';
+    svg.style.verticalAlign = svg.style.verticalAlign || 'middle';
+
+    svg.innerHTML = paths;
+    return svg;
+  }
+
+  window.lucide = {
+    createIcons: function() {
+      document.querySelectorAll('[data-lucide]').forEach(function(el) {
+        var name = el.getAttribute('data-lucide');
+        var svg = svgFor(name, el);
+        if (svg && el.parentNode) el.parentNode.replaceChild(svg, el);
+      });
+    }
+  };
+})();
+
+
+</script>
+<style>
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --p950:#3B0764;--p900:#581C87;--p800:#6B21A8;--p700:#7E22CE;
+  --p600:#9333EA;--p500:#A855F7;--p400:#C084FC;--p300:#D8B4FE;
+  --p200:#E9D5FF;--p100:#F3E8FF;--p50:#FAF5FF;
+  --a500:#D946EF;--a400:#E879F9;--a100:#FAE8FF;
+  --n900:#171717;--n800:#262626;--n700:#404040;--n600:#525252;
+  --n500:#737373;--n400:#A3A3A3;--n300:#D4D4D4;--n200:#E5E5E5;
+  --n100:#F5F5F5;--n50:#FAFAFA;
+  --success:#10B981;--warning:#F59E0B;--error:#EF4444;--info:#6366F1;
+  --bg:#FDF4FF;
+}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--n900);min-height:100vh}
+
+/* ── PAGE HEADER ── */
+.page-header{
+  background:linear-gradient(135deg,var(--p950) 0%,var(--p800) 60%,var(--a500) 100%);
+  padding:40px 48px 48px;position:relative;overflow:hidden;
+}
+.page-header::before{content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse at 80% 50%,rgba(232,121,249,0.15) 0%,transparent 60%);}
+.page-header-inner{max-width:1200px;margin:0 auto;position:relative;}
+.brand{display:inline-flex;align-items:center;gap:8px;margin-bottom:24px;
+  background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.15);
+  border-radius:99px;padding:6px 14px 6px 6px;}
+.brand-icon{width:26px;height:26px;border-radius:6px;
+  background:linear-gradient(135deg,var(--a400),var(--p400));
+  display:flex;align-items:center;justify-content:center;}
+.brand-icon i{width:14px;height:14px;color:white;}
+.brand-name{color:white;font-weight:700;font-size:14px;}
+.page-title{font-size:clamp(28px,4vw,44px);font-weight:900;color:white;
+  letter-spacing:-0.03em;line-height:1.1;margin-bottom:10px;}
+.page-title span{color:var(--a400);}
+.page-sub{color:rgba(255,255,255,0.6);font-size:16px;max-width:500px;line-height:1.55;}
+.page-badges{display:flex;gap:12px;margin-top:20px;flex-wrap:wrap;}
+.page-badge{background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.14);
+  border-radius:var(--r-full,99px);padding:6px 14px;color:rgba(255,255,255,0.75);
+  font-size:12px;font-weight:500;display:flex;align-items:center;gap:6px;}
+.page-badge i{width:13px;height:13px;}
+
+/* ── FLOW STEPPER ── */
+.flow-wrap{max-width:1200px;margin:0 auto;padding:40px 48px 0;}
+.flow-stepper{
+  display:flex;align-items:center;justify-content:center;
+  background:white;border-radius:20px;padding:20px 32px;
+  box-shadow:0 2px 12px rgba(168,85,247,0.1);margin-bottom:48px;
+  border:1px solid var(--p100);overflow-x:auto;gap:0;
+}
+.step{display:flex;flex-direction:column;align-items:center;gap:8px;min-width:80px;cursor:pointer;}
+.step-num{
+  width:36px;height:36px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:13px;font-weight:700;transition:all 0.2s;
+  border:2px solid var(--n200);background:white;color:var(--n400);
+}
+.step.active .step-num{background:var(--p600);border-color:var(--p600);color:white;
+  box-shadow:0 4px 12px rgba(147,51,234,0.4);}
+.step.done .step-num{background:var(--success);border-color:var(--success);color:white;}
+.step-label{font-size:11px;font-weight:600;color:var(--n400);text-align:center;line-height:1.3;}
+.step.active .step-label{color:var(--p700);}
+.step.done .step-label{color:var(--success);}
+.step-connector{flex:1;height:2px;background:var(--n200);min-width:20px;margin-bottom:20px;}
+.step-connector.done{background:var(--success);}
+
+/* ── MAIN LAYOUT ── */
+.main{max-width:1200px;margin:0 auto;padding:0 48px 80px;
+  display:grid;grid-template-columns:360px 1fr;gap:48px;align-items:start;}
+
+/* ── PHONE FRAME ── */
+.phone-wrap{position:sticky;top:32px;}
+.phone-frame{
+  width:360px;border-radius:50px;
+  box-shadow:0 32px 80px rgba(59,7,100,0.3),0 0 0 10px #1a0a2e,0 0 0 12px #0d0518;
+  overflow:hidden;position:relative;background:#FAF5FF;
+}
+.phone-notch{
+  position:absolute;top:16px;left:50%;transform:translateX(-50%);
+  width:110px;height:30px;background:#0d0518;border-radius:20px;z-index:20;
+}
+.phone-status{
+  position:absolute;top:0;left:0;right:0;
+  display:flex;justify-content:space-between;align-items:center;
+  padding:14px 24px 0;z-index:15;
+}
+.phone-time{font-size:13px;font-weight:700;color:var(--n900);}
+.phone-status-icons{display:flex;align-items:center;gap:4px;}
+.phone-status-icons i{width:14px;height:14px;color:var(--n700);}
+.phone-screen{min-height:720px;display:none;flex-direction:column;}
+.phone-screen.active{display:flex;}
+
+/* shared phone chrome */
+.p-topbar{
+  padding:52px 20px 16px;display:flex;align-items:center;gap:12px;
+}
+.p-topbar.dark{background:var(--p950);}
+.p-back{width:36px;height:36px;border-radius:10px;cursor:pointer;display:flex;align-items:center;
+  justify-content:center;cursor:pointer;flex-shrink:0;}
+.p-back.light{background:var(--p100);color:var(--p700);}
+.p-back.dark-btn{background:rgba(255,255,255,0.12);color:white;}
+.p-back i{width:18px;height:18px;}
+.p-topbar-title{font-size:17px;font-weight:800;letter-spacing:-0.02em;}
+.p-topbar-title.white{color:white;}
+.p-topbar-right{margin-left:auto;}
+
+/* ── SCREEN 1: UPLOAD ── */
+.s1{background:white;}
+.s1 .p-topbar{background:var(--p950);padding-bottom:20px;}
+.s1-body{padding:20px;flex:1;display:flex;flex-direction:column;gap:16px;background:#FAF5FF;}
+.upload-zone{
+  border:2px dashed var(--p300);border-radius:24px;
+  background:white;padding:32px 20px;
+  display:flex;flex-direction:column;align-items:center;gap:12px;
+  cursor:pointer;transition:all 0.2s;
+}
+.upload-zone:hover{border-color:var(--p500);background:var(--p50);}
+.upload-icon-wrap{
+  width:72px;height:72px;border-radius:20px;
+  background:linear-gradient(135deg,var(--p100),var(--a100));
+  display:flex;align-items:center;justify-content:center;
+}
+.upload-icon-wrap i{width:32px;height:32px;color:var(--p600);}
+.upload-title{font-size:16px;font-weight:700;color:var(--n900);}
+.upload-sub{font-size:12px;color:var(--n500);text-align:center;line-height:1.5;}
+.upload-formats{
+  display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin-top:4px;
+}
+.upload-fmt{font-size:10px;font-weight:600;padding:3px 8px;border-radius:99px;
+  background:var(--p100);color:var(--p700);}
+.divider-or{display:flex;align-items:center;gap:10px;color:var(--n400);font-size:12px;}
+.divider-or::before,.divider-or::after{content:'';flex:1;height:1px;background:var(--n200);}
+.source-btns{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;}
+.source-btn{
+  background:white;border:1.5px solid var(--n200);border-radius:16px;
+  padding:14px 8px;display:flex;flex-direction:column;align-items:center;gap:8px;
+  cursor:pointer;transition:all 0.15s;
+}
+.source-btn:hover{border-color:var(--p400);background:var(--p50);}
+.source-btn.active{border-color:var(--p500);background:var(--p50);box-shadow:0 0 0 3px var(--p100);}
+.source-btn i{width:22px;height:22px;color:var(--p600);}
+.source-btn span{font-size:11px;font-weight:600;color:var(--n700);text-align:center;}
+
+/* ── UPLOAD ZONE SELECTED STATE ── */
+.upload-zone.file-selected{
+  border-color:#22C55E;border-style:solid;background:#F0FDF4;
+}
+.upload-zone.file-selected .upload-icon-wrap{background:linear-gradient(135deg,#DCFCE7,#BBF7D0);}
+.upload-zone.file-selected .upload-icon-wrap i{color:#16A34A;}
+.upload-zone.file-selected .upload-title{color:#15803D;}
+.file-selected-info{display:flex;align-items:center;gap:8px;background:white;border:1px solid #BBF7D0;border-radius:12px;padding:10px 12px;width:100%;}
+.file-selected-info-text{flex:1;}
+.file-selected-name{font-size:12px;font-weight:700;color:var(--n800);}
+.file-selected-source{font-size:11px;color:var(--n400);margin-top:2px;}
+.file-selected-remove{background:none;border:none;cursor:pointer;padding:4px;border-radius:8px;color:var(--n400);display:flex;align-items:center;}
+.file-selected-remove:hover{background:var(--n100);color:var(--n700);}
+.file-selected-remove i{width:14px;height:14px;}
+.file-ready-tag{background:#DCFCE7;color:#15803D;font-size:10px;font-weight:700;padding:3px 8px;border-radius:99px;border:1px solid #BBF7D0;}
+
+/* ── SOURCE PICKER SHEETS ── */
+.source-picker-sheet{
+  position:absolute;bottom:0;left:0;right:0;
+  background:white;border-radius:24px 24px 0 0;
+  z-index:80;transform:translateY(100%);
+  transition:transform 0.3s cubic-bezier(.4,0,.2,1);
+  max-height:85%;
+}
+.source-picker-sheet.open{transform:translateY(0);}
+.source-picker-header{padding:16px 18px 12px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--n100);}
+.source-picker-title{font-size:15px;font-weight:800;color:var(--n900);}
+.source-picker-close{width:28px;height:28px;border-radius:99px;background:var(--n100);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.source-picker-close i{width:14px;height:14px;color:var(--n600);}
+.source-picker-body{padding:16px 18px 20px;display:flex;flex-direction:column;gap:14px;}
+
+/* Camera viewfinder */
+.camera-viewfinder{background:#0F0F0F;border-radius:16px;height:180px;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;}
+.camera-overlay-text{color:rgba(255,255,255,0.5);font-size:12px;text-align:center;}
+.camera-corners .cam-corner{position:absolute;width:20px;height:20px;border-color:#A855F7;border-style:solid;border-width:0;}
+.camera-corners .cam-corner.tl{top:12px;left:12px;border-top-width:3px;border-left-width:3px;border-radius:4px 0 0 0;}
+.camera-corners .cam-corner.tr{top:12px;right:12px;border-top-width:3px;border-right-width:3px;border-radius:0 4px 0 0;}
+.camera-corners .cam-corner.bl{bottom:12px;left:12px;border-bottom-width:3px;border-left-width:3px;border-radius:0 0 0 4px;}
+.camera-corners .cam-corner.br{bottom:12px;right:12px;border-bottom-width:3px;border-right-width:3px;border-radius:0 0 4px 0;}
+.camera-doc-preview{position:absolute;width:72%;height:78%;background:#1a1a2e;border-radius:6px;display:flex;flex-direction:column;gap:4px;padding:8px;opacity:0.7;}
+.camera-doc-line{height:4px;border-radius:2px;background:rgba(255,255,255,0.3);}
+.camera-doc-line.short{width:55%;}
+.camera-scan-bar{position:absolute;left:14%;right:14%;height:2px;background:linear-gradient(90deg,transparent,var(--p400),transparent);animation:camScan 1.8s ease-in-out infinite;top:30%;}
+@keyframes camScan{0%{top:20%;opacity:0}10%{opacity:1}90%{opacity:1}100%{top:80%;opacity:0}}
+.camera-badge{position:absolute;top:10px;left:50%;transform:translateX(-50%);background:rgba(168,85,247,0.9);border-radius:99px;padding:4px 12px;font-size:10px;font-weight:700;color:white;white-space:nowrap;}
+.camera-capture-btn{background:linear-gradient(135deg,var(--p700),var(--p600));color:white;border:none;border-radius:14px;padding:14px;font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;width:100%;}
+.camera-capture-btn i{width:18px;height:18px;}
+
+/* Gallery grid */
+.gallery-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;}
+.gallery-thumb{border-radius:10px;overflow:hidden;aspect-ratio:3/4;cursor:pointer;border:2px solid transparent;position:relative;transition:all 0.15s;}
+.gallery-thumb.selected{border-color:var(--p500);}
+.gallery-thumb-inner{width:100%;height:100%;display:flex;flex-direction:column;gap:3px;padding:6px;}
+.gallery-thumb-rx{font-size:7px;font-weight:700;letter-spacing:0.05em;}
+.gallery-thumb-lines div{height:3px;border-radius:1px;margin-bottom:2px;}
+.gallery-thumb .selected-ring{position:absolute;top:5px;right:5px;width:16px;height:16px;border-radius:99px;background:var(--p600);display:none;align-items:center;justify-content:center;}
+.gallery-thumb.selected .selected-ring{display:flex;}
+.gallery-thumb .selected-ring i{width:10px;height:10px;color:white;}
+.gallery-select-btn{background:linear-gradient(135deg,var(--p700),var(--p600));color:white;border:none;border-radius:14px;padding:14px;font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;width:100%;opacity:0.45;pointer-events:none;transition:all 0.2s;}
+.gallery-select-btn.ready{opacity:1;pointer-events:auto;}
+.gallery-select-btn i{width:18px;height:18px;}
+
+/* File list */
+.file-list{display:flex;flex-direction:column;gap:8px;}
+.file-list-item{background:var(--n50);border:1.5px solid var(--n200);border-radius:12px;padding:12px;display:flex;align-items:center;gap:10px;cursor:pointer;transition:all 0.15s;}
+.file-list-item:hover{border-color:var(--p300);background:var(--p50);}
+.file-list-item.selected{border-color:var(--p500);background:var(--p50);}
+.file-item-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.file-item-icon i{width:18px;height:18px;}
+.file-item-info{flex:1;}
+.file-item-name{font-size:12px;font-weight:700;color:var(--n800);}
+.file-item-meta{font-size:10px;color:var(--n400);margin-top:2px;}
+.file-item-check{width:18px;height:18px;border-radius:99px;background:var(--p600);display:none;align-items:center;justify-content:center;flex-shrink:0;}
+.file-list-item.selected .file-item-check{display:flex;}
+.file-item-check i{width:10px;height:10px;color:white;}
+.file-open-btn{background:linear-gradient(135deg,var(--p700),var(--p600));color:white;border:none;border-radius:14px;padding:14px;font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;width:100%;opacity:0.45;pointer-events:none;transition:all 0.2s;}
+.file-open-btn.ready{opacity:1;pointer-events:auto;}
+.file-open-btn i{width:18px;height:18px;}
+.recent-header{font-size:13px;font-weight:700;color:var(--n800);display:flex;justify-content:space-between;align-items:center;}
+.recent-header a{font-size:12px;color:var(--p600);font-weight:600;}
+.recent-rx{
+  background:white;border-radius:16px;padding:14px;
+  display:flex;align-items:center;gap:12px;
+  border:1px solid var(--n100);box-shadow:0 1px 6px rgba(168,85,247,0.06);
+}
+.recent-rx-icon{width:42px;height:42px;border-radius:12px;background:var(--p100);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.recent-rx-icon i{width:20px;height:20px;color:var(--p600);}
+.recent-rx-info{flex:1;}
+.recent-rx-name{font-size:13px;font-weight:700;color:var(--n900);}
+.recent-rx-meta{font-size:11px;color:var(--n400);margin-top:2px;}
+.recent-rx-badge{font-size:10px;font-weight:600;padding:3px 8px;border-radius:99px;background:var(--success);color:white;}
+.recent-rx-actions{display:flex;align-items:center;gap:8px;flex-shrink:0;}
+.recent-rx-view{font-size:11px;font-weight:700;color:var(--p600);border:1.5px solid var(--p200);background:var(--p50);border-radius:8px;padding:5px 10px;cursor:pointer;display:flex;align-items:center;gap:4px;white-space:nowrap;}
+.recent-rx-view i{width:12px;height:12px;}
+.recent-rx-view:hover{background:var(--p100);border-color:var(--p300);}
+
+/* ── RX DETAIL SHEET ── */
+.rx-detail-sheet-body{padding:0 18px 20px;display:flex;flex-direction:column;gap:14px;max-height:480px;overflow-y:auto;}
+.rx-detail-hero{background:linear-gradient(135deg,var(--p900),var(--p700));border-radius:14px;padding:14px 16px;color:white;}
+.rx-detail-doctor{font-size:15px;font-weight:800;color:white;}
+.rx-detail-spec{font-size:11px;color:rgba(255,255,255,0.65);margin-top:2px;}
+.rx-detail-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;}
+.rx-detail-chip{background:rgba(255,255,255,0.12);border-radius:99px;padding:4px 10px;font-size:10px;font-weight:600;color:rgba(255,255,255,0.85);display:flex;align-items:center;gap:4px;}
+.rx-detail-chip i{width:10px;height:10px;}
+.rx-detail-section-title{font-size:11px;font-weight:800;color:var(--n500);text-transform:uppercase;letter-spacing:0.06em;}
+.rx-detail-med-row{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;background:var(--n50);border-radius:12px;border:1px solid var(--n100);}
+.rx-detail-med-num{width:22px;height:22px;border-radius:99px;background:var(--p100);color:var(--p700);font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+.rx-detail-med-name{font-size:13px;font-weight:700;color:var(--n900);}
+.rx-detail-med-ing{font-size:10px;color:var(--n400);margin-top:1px;}
+.rx-detail-med-tags{display:flex;gap:5px;flex-wrap:wrap;margin-top:5px;}
+.rx-detail-med-tag{font-size:10px;font-weight:600;padding:2px 7px;border-radius:99px;background:var(--p100);color:var(--p700);}
+.rx-detail-cond{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:700;padding:3px 8px 3px 6px;border-radius:99px;margin-bottom:4px;}
+.rx-detail-cond i{width:10px;height:10px;}
+.rx-detail-footer{background:#F0FDF4;border:1px solid #BBF7D0;border-radius:12px;padding:10px 12px;display:flex;align-items:center;gap:8px;}
+.rx-detail-footer i{width:15px;height:15px;color:#16A34A;flex-shrink:0;}
+.rx-detail-footer span{font-size:11px;font-weight:600;color:#15803D;}
+.p-cta{
+  margin:0 20px 20px;padding:16px;border-radius:16px;
+  background:linear-gradient(135deg,var(--p700),var(--p600));color:white;
+  font-weight:700;font-size:15px;border:none;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  box-shadow:0 4px 16px rgba(147,51,234,0.4);transition:all 0.15s;
+}
+.p-cta:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(147,51,234,0.5);}
+.p-cta i{width:18px;height:18px;}
+.p-cta-secondary{
+  margin:0 20px 20px;padding:14px;border-radius:16px;
+  background:white;color:var(--p700);
+  font-weight:700;font-size:14px;border:1.5px solid var(--p200);cursor:pointer;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  transition:all 0.15s;
+}
+.p-cta-secondary:hover{background:var(--p50);}
+.p-cta-secondary i{width:16px;height:16px;}
+
+/* ── MANUAL ENTRY OVERLAY ─────────────────────────────────────── */
+.manual-overlay{
+  position:absolute;inset:0;z-index:60;
+  background:var(--n50);
+  transform:translateY(100%);
+  transition:transform 0.35s cubic-bezier(0.32,0.72,0,1);
+  display:flex;flex-direction:column;overflow:hidden;
+  border-radius:inherit;
+}
+.manual-overlay.open{transform:translateY(0);}
+
+/* topbar */
+.mo-topbar{
+  display:flex;align-items:center;gap:10px;
+  padding:52px 18px 14px;
+  background:white;border-bottom:1px solid var(--n100);
+  flex-shrink:0;
+}
+.mo-back{width:36px;height:36px;border-radius:10px;background:var(--n100);
+  display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;}
+.mo-back i{width:18px;height:18px;color:var(--n700);}
+.mo-title{font-size:16px;font-weight:800;color:var(--n900);flex:1;}
+.mo-step-pill{font-size:11px;font-weight:700;color:var(--p600);
+  background:var(--p50);border:1px solid var(--p200);border-radius:99px;padding:3px 10px;}
+
+/* step progress bar */
+.mo-progress{height:3px;background:var(--n100);flex-shrink:0;}
+.mo-progress-fill{height:100%;background:var(--p500);transition:width 0.4s ease;border-radius:0 2px 2px 0;}
+
+/* scrollable body */
+.mo-body{flex:1;overflow-y:auto;padding:18px 18px 100px;}
+
+/* section labels */
+.mo-section{font-size:11px;font-weight:800;color:var(--n500);text-transform:uppercase;
+  letter-spacing:0.06em;margin:0 0 10px;}
+
+/* field groups */
+.mo-field{margin-bottom:14px;}
+.mo-label{font-size:12px;font-weight:600;color:var(--n600);margin-bottom:5px;}
+.mo-input{width:100%;padding:11px 13px;border:1.5px solid var(--n200);border-radius:12px;
+  font-size:14px;color:var(--n900);background:white;box-sizing:border-box;
+  font-family:inherit;outline:none;transition:border 0.15s;}
+.mo-input:focus{border-color:var(--p400);}
+
+/* chip selectors */
+.mo-chips{display:flex;flex-wrap:wrap;gap:7px;}
+.mo-chip{padding:6px 13px;border-radius:99px;border:1.5px solid var(--n200);
+  font-size:12px;font-weight:600;color:var(--n600);background:white;cursor:pointer;transition:all 0.15s;}
+.mo-chip.selected{background:var(--p600);border-color:var(--p600);color:white;}
+
+/* added medicine cards */
+.mo-med-card{background:white;border:1.5px solid var(--n100);border-radius:14px;
+  padding:12px 14px;margin-bottom:10px;position:relative;}
+.mo-med-card-name{font-size:13px;font-weight:700;color:var(--n900);}
+.mo-med-card-detail{font-size:11px;color:var(--n400);margin-top:2px;}
+.mo-med-delete{position:absolute;top:10px;right:10px;width:26px;height:26px;
+  border-radius:8px;background:#FEE2E2;border:none;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;}
+.mo-med-delete i{width:13px;height:13px;color:#EF4444;}
+
+/* add medicine mini-form */
+.mo-add-form{background:white;border:1.5px solid var(--p200);border-radius:16px;
+  padding:14px;margin-bottom:14px;}
+.mo-add-form-title{font-size:12px;font-weight:800;color:var(--p700);margin-bottom:12px;
+  display:flex;align-items:center;gap:6px;}
+.mo-add-form-title i{width:14px;height:14px;}
+
+/* divider */
+.mo-divider{height:1px;background:var(--n100);margin:16px 0;}
+
+/* sticky footer CTA */
+.mo-footer{
+  position:absolute;bottom:0;left:0;right:0;
+  padding:12px 18px 28px;background:white;
+  border-top:1px solid var(--n100);
+}
+.mo-cta{width:100%;padding:15px;border-radius:14px;
+  background:linear-gradient(135deg,var(--p700),var(--p500));color:white;
+  font-size:15px;font-weight:700;border:none;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  box-shadow:0 4px 16px rgba(147,51,234,0.35);}
+.mo-cta:disabled{background:var(--n200);color:var(--n400);box-shadow:none;cursor:not-allowed;}
+.mo-cta i{width:17px;height:17px;}
+
+/* ── SCREEN 2: SCANNING ── */
+.s2{background:var(--p950);}
+.s2-body{flex:1;padding:20px;display:flex;flex-direction:column;align-items:center;gap:24px;}
+.scan-doc-wrap{
+  position:relative;width:220px;height:280px;
+  background:white;border-radius:16px;overflow:hidden;
+  box-shadow:0 8px 32px rgba(0,0,0,0.4);
+}
+.scan-doc-inner{padding:14px;}
+.scan-doc-header{background:var(--p900);padding:10px;border-radius:8px;margin-bottom:10px;}
+.scan-doc-header-text{font-size:8px;color:rgba(255,255,255,0.9);font-weight:700;line-height:1.4;}
+.scan-doc-row{display:flex;justify-content:space-between;margin-bottom:6px;}
+.scan-doc-label{font-size:7px;color:var(--n500);}
+.scan-doc-val{font-size:7px;font-weight:700;color:var(--n900);}
+.scan-doc-rx-title{font-size:7px;font-weight:700;color:white;background:var(--p700);
+  padding:3px 6px;border-radius:4px;margin-bottom:6px;}
+.scan-doc-med{background:var(--n50);border-radius:4px;padding:4px 6px;margin-bottom:3px;
+  display:flex;justify-content:space-between;align-items:center;}
+.scan-doc-med-name{font-size:6px;font-weight:600;color:var(--n800);}
+.scan-doc-med-dose{font-size:6px;color:var(--n500);}
+.scan-line{
+  position:absolute;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,transparent,var(--p400),var(--a400),transparent);
+  animation:scanMove 2s ease-in-out infinite;
+  box-shadow:0 0 12px rgba(168,85,247,0.8);
+}
+@keyframes scanMove{0%{top:0}100%{top:100%}}
+.scan-corners .corner{
+  position:absolute;width:20px;height:20px;border-color:var(--a400);border-style:solid;
+}
+.corner-tl{top:8px;left:8px;border-width:3px 0 0 3px;border-radius:4px 0 0 0;}
+.corner-tr{top:8px;right:8px;border-width:3px 3px 0 0;border-radius:0 4px 0 0;}
+.corner-bl{bottom:8px;left:8px;border-width:0 0 3px 3px;border-radius:0 0 0 4px;}
+.corner-br{bottom:8px;right:8px;border-width:0 3px 3px 0;border-radius:0 0 4px 0;}
+
+.scan-title{font-size:20px;font-weight:800;color:white;text-align:center;letter-spacing:-0.02em;}
+.scan-sub{font-size:13px;color:rgba(255,255,255,0.5);text-align:center;}
+.scan-steps{width:100%;display:flex;flex-direction:column;gap:10px;}
+.scan-step{
+  display:flex;align-items:center;gap:12px;
+  background:rgba(255,255,255,0.06);border-radius:14px;padding:12px 14px;
+  border:1px solid rgba(255,255,255,0.08);
+}
+.scan-step-icon{
+  width:32px;height:32px;border-radius:10px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+}
+.scan-step-icon.done{background:var(--success);}
+.scan-step-icon.active{background:var(--p600);animation:pulse 1.5s infinite;}
+.scan-step-icon.pending{background:rgba(255,255,255,0.1);}
+.scan-step-icon i{width:15px;height:15px;color:white;}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(147,51,234,0.5)}50%{box-shadow:0 0 0 8px rgba(147,51,234,0)}}
+.scan-step-text{flex:1;}
+.scan-step-label{font-size:13px;font-weight:600;color:white;}
+.scan-step-sub{font-size:11px;color:rgba(255,255,255,0.4);margin-top:1px;}
+.scan-step-check i{width:16px;height:16px;color:var(--success);}
+.scan-progress-wrap{width:100%;}
+.scan-progress-track{height:6px;background:rgba(255,255,255,0.1);border-radius:99px;overflow:hidden;}
+.scan-progress-fill{height:100%;border-radius:99px;
+  background:linear-gradient(90deg,var(--p500),var(--a400));width:65%;
+  animation:progressAnim 2s ease-in-out infinite alternate;}
+@keyframes progressAnim{from{width:45%}to{width:80%}}
+.scan-progress-label{font-size:11px;color:rgba(255,255,255,0.4);text-align:center;margin-top:8px;}
+
+/* ── SCREEN 3: REVIEW ── */
+.s3{background:#FAF5FF;}
+.s3 .p-topbar{background:var(--p950);}
+.s3-body{flex:1;padding:16px;display:flex;flex-direction:column;gap:12px;overflow:hidden;}
+.rx-meta-card{
+  background:white;border-radius:18px;padding:14px;
+  border:1px solid var(--p100);box-shadow:0 2px 8px rgba(168,85,247,0.08);
+}
+.rx-meta-top{display:flex;justify-content:space-between;align-items:flex-start;}
+.rx-doctor-name{font-size:13px;font-weight:800;color:var(--p900);}
+.rx-doctor-spec{font-size:11px;color:var(--n500);margin-top:1px;}
+.rx-verified{
+  display:flex;align-items:center;gap:4px;font-size:10px;font-weight:600;
+  color:var(--success);background:#D1FAE5;padding:3px 8px;border-radius:99px;
+}
+.rx-verified i{width:11px;height:11px;}
+.rx-meta-row{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;}
+.rx-chip{
+  font-size:10px;font-weight:600;padding:3px 10px;border-radius:99px;
+  background:var(--p100);color:var(--p700);
+  display:flex;align-items:center;gap:4px;
+}
+.rx-chip i{width:11px;height:11px;}
+.allergy-banner{
+  background:linear-gradient(135deg,#FEE2E2,#FECACA);
+  border:1.5px solid #FCA5A5;border-radius:14px;padding:10px 14px;
+  display:flex;align-items:center;gap:10px;
+}
+.allergy-banner-icon{
+  width:32px;height:32px;border-radius:10px;background:#EF4444;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+}
+.allergy-banner-icon i{width:16px;height:16px;color:white;}
+.allergy-banner-text .title{font-size:12px;font-weight:800;color:#991B1B;}
+.allergy-banner-text .sub{font-size:11px;color:#B91C1C;margin-top:1px;}
+.found-header{display:flex;justify-content:space-between;align-items:center;}
+.found-title{font-size:14px;font-weight:800;color:var(--n900);}
+.found-count{font-size:12px;color:var(--n500);}
+.med-list{display:flex;flex-direction:column;gap:8px;overflow-y:auto;max-height:280px;padding-right:2px;}
+.med-list::-webkit-scrollbar{width:3px;}
+.med-list::-webkit-scrollbar-thumb{background:var(--p300);border-radius:99px;}
+.med-card{
+  background:white;border-radius:16px;padding:12px;
+  border:1.5px solid var(--n100);display:flex;align-items:center;gap:10px;
+  transition:border-color 0.15s;
+}
+.med-card.selected{border-color:var(--p300);background:var(--p50);}
+.med-card-toggle{
+  width:22px;height:22px;border-radius:6px;border:2px solid var(--n300);
+  display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;
+  transition:all 0.15s;
+}
+.med-card.selected .med-card-toggle{background:var(--p600);border-color:var(--p600);}
+.med-card-toggle i{width:12px;height:12px;color:white;}
+.med-card-body{flex:1;}
+.med-condition{
+  display:inline-flex;align-items:center;gap:5px;
+  font-size:10px;font-weight:700;padding:3px 8px 3px 5px;
+  border-radius:99px;margin-bottom:5px;letter-spacing:0.01em;
+}
+.med-condition i{width:11px;height:11px;flex-shrink:0;}
+.cond-diabetes  {background:#FEF3C7;color:#92400E;}
+.cond-diabetes  i{color:#D97706;}
+.cond-hyper     {background:#DBEAFE;color:#1E40AF;}
+.cond-hyper     i{color:#3B82F6;}
+.cond-neuro     {background:#EDE9FE;color:#5B21B6;}
+.cond-neuro     i{color:#7C3AED;}
+.cond-gastric   {background:#D1FAE5;color:#065F46;}
+.cond-gastric   i{color:#10B981;}
+.med-card-name{font-size:13px;font-weight:700;color:var(--n900);}
+.med-card-dose{font-size:11px;color:var(--n500);margin-top:1px;}
+.med-card-tags{display:flex;gap:5px;margin-top:6px;flex-wrap:wrap;}
+.med-tag{font-size:10px;font-weight:600;padding:2px 7px;border-radius:99px;}
+.tag-morning{background:#FEF3C7;color:#92400E;}
+.tag-evening{background:#DBEAFE;color:#1E40AF;}
+.tag-night{background:#EDE9FE;color:#5B21B6;}
+.tag-twice{background:#D1FAE5;color:#065F46;}
+.tag-days{background:var(--n100);color:var(--n600);}
+.med-card-instr{font-size:10px;color:var(--n400);margin-top:3px;font-style:italic;}
+
+/* ── SALT LABEL ── */
+.med-salt{
+  font-size:10px;color:var(--n400);margin-top:2px;
+  display:flex;align-items:center;gap:4px;font-style:normal;
+}
+.med-salt i{width:10px;height:10px;flex-shrink:0;color:var(--n400);}
+
+/* ── CONFLICT INDICATORS ── */
+.med-card.has-conflict{border-color:#FB923C;background:#FFFBEB;}
+.med-card.has-conflict .med-card-name{color:#92400E;}
+.conflict-badge{
+  display:inline-flex;align-items:center;gap:4px;
+  font-size:10px;font-weight:700;padding:3px 8px;border-radius:99px;
+  background:#FEE2E2;color:#991B1B;margin-top:5px;cursor:pointer;
+  border:1px solid #FECACA;
+}
+.conflict-badge i{width:11px;height:11px;}
+
+/* ── SALT CONFLICT BANNER ── */
+.conflict-banner{
+  background:linear-gradient(135deg,#FFF7ED,#FFFBEB);
+  border:1.5px solid #FB923C;border-radius:14px;padding:12px 14px;
+  display:flex;align-items:flex-start;gap:10px;cursor:pointer;
+}
+.conflict-banner-icon{
+  width:34px;height:34px;border-radius:10px;background:#FB923C;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+}
+.conflict-banner-icon i{width:17px;height:17px;color:white;}
+.conflict-banner-body{flex:1;}
+.conflict-banner-title{font-size:12px;font-weight:800;color:#C2410C;}
+.conflict-banner-sub{font-size:11px;color:#EA580C;margin-top:2px;line-height:1.45;}
+.conflict-banner-link{font-size:11px;font-weight:700;color:#9A3412;text-decoration:underline;margin-top:4px;display:block;}
+
+/* ── CONFLICT RESOLUTION SHEET ── */
+.conflict-sheet-body{padding:14px 18px;display:flex;flex-direction:column;gap:14px;max-height:460px;overflow-y:auto;}
+.conflict-compare{display:grid;grid-template-columns:1fr 28px 1fr;gap:6px;align-items:center;}
+.conflict-card{
+  border-radius:12px;padding:12px;border:1.5px solid;
+}
+.conflict-card.existing{background:#FFF1F2;border-color:#FECACA;}
+.conflict-card.incoming{background:#EEF2FF;border-color:#C7D2FE;}
+.conflict-card-badge{
+  font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:0.06em;
+  padding:2px 7px;border-radius:99px;display:inline-block;margin-bottom:6px;
+}
+.conflict-card.existing .conflict-card-badge{background:#FECACA;color:#991B1B;}
+.conflict-card.incoming .conflict-card-badge{background:#C7D2FE;color:#3730A3;}
+.conflict-card-brand{font-size:13px;font-weight:800;color:var(--n900);line-height:1.2;}
+.conflict-card-salt{font-size:10px;font-weight:600;color:var(--n500);margin-top:3px;}
+.conflict-card-detail{font-size:10px;color:var(--n500);margin-top:2px;line-height:1.4;}
+.conflict-card-doctor{font-size:10px;font-weight:600;margin-top:6px;padding-top:6px;border-top:1px solid rgba(0,0,0,0.06);}
+.conflict-card.existing .conflict-card-doctor{color:#991B1B;}
+.conflict-card.incoming .conflict-card-doctor{color:#3730A3;}
+.conflict-vs{font-size:13px;font-weight:900;color:#F59E0B;text-align:center;}
+.conflict-salt-match{
+  background:#FEF9C3;border:1px solid #FDE047;border-radius:8px;
+  padding:7px 10px;display:flex;align-items:center;gap:6px;
+  font-size:11px;font-weight:600;color:#713F12;
+}
+.conflict-salt-match i{width:13px;height:13px;color:#CA8A04;flex-shrink:0;}
+.conflict-actions-label{font-size:11px;font-weight:700;color:var(--n700);text-transform:uppercase;letter-spacing:0.05em;}
+.conflict-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.conflict-action-btn{
+  border-radius:12px;padding:11px 10px;border:1.5px solid;
+  display:flex;flex-direction:column;gap:3px;cursor:pointer;
+  transition:all 0.15s;background:white;text-align:left;
+}
+.conflict-action-btn:hover{transform:translateY(-1px);}
+.conflict-action-btn i{width:16px;height:16px;margin-bottom:2px;}
+.conflict-action-btn .action-title{font-size:12px;font-weight:700;}
+.conflict-action-btn .action-sub{font-size:10px;color:var(--n500);line-height:1.3;}
+.ca-keep-new{border-color:#6EE7B7;background:#F0FDF4;}
+.ca-keep-new i,.ca-keep-new .action-title{color:#065F46;}
+.ca-keep-old{border-color:#93C5FD;background:#EFF6FF;}
+.ca-keep-old i,.ca-keep-old .action-title{color:#1E40AF;}
+.ca-keep-both{border-color:#FCD34D;background:#FFFBEB;}
+.ca-keep-both i,.ca-keep-both .action-title{color:#92400E;}
+.ca-ask-doc{border-color:#C084FC;background:#FAF5FF;}
+.ca-ask-doc i,.ca-ask-doc .action-title{color:#6B21A8;}
+
+.med-card-edit{
+  width:28px;height:28px;border-radius:8px;border:1.5px solid var(--n200);
+  background:white;display:flex;align-items:center;justify-content:center;
+  cursor:pointer;flex-shrink:0;margin-left:4px;transition:all 0.15s;
+}
+.med-card-edit:hover{border-color:var(--p400);background:var(--p50);}
+.med-card-edit i{width:13px;height:13px;color:var(--n500);}
+.med-card.selected .med-card-edit{border-color:var(--p200);}
+.med-card.selected .med-card-edit i{color:var(--p500);}
+
+/* ── EDIT BOTTOM SHEET ── */
+.edit-backdrop{
+  position:absolute;inset:0;background:rgba(0,0,0,0.5);z-index:50;
+  opacity:0;pointer-events:none;transition:opacity 0.25s;border-radius:50px;
+}
+.edit-backdrop.open{opacity:1;pointer-events:all;}
+.edit-sheet{
+  position:absolute;bottom:0;left:0;right:0;z-index:51;
+  background:white;border-radius:28px 28px 0 0;
+  transform:translateY(100%);transition:transform 0.32s cubic-bezier(0.32,0.72,0,1);
+  box-shadow:0 -8px 32px rgba(59,7,100,0.25);
+  padding-bottom:24px;
+}
+.edit-sheet.open{transform:translateY(0);}
+.edit-sheet-handle{width:36px;height:4px;background:var(--n200);border-radius:99px;margin:12px auto 0;}
+.edit-sheet-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 18px 12px;border-bottom:1px solid var(--n100);
+}
+.edit-sheet-title{font-size:15px;font-weight:800;color:var(--n900);}
+.edit-sheet-close{
+  width:28px;height:28px;border-radius:8px;background:var(--n100);border:none;
+  display:flex;align-items:center;justify-content:center;cursor:pointer;
+}
+.edit-sheet-close i{width:14px;height:14px;color:var(--n600);}
+.edit-sheet-body{padding:14px 18px;display:flex;flex-direction:column;gap:12px;max-height:420px;overflow-y:auto;}
+.edit-field{}
+.edit-field label{display:block;font-size:11px;font-weight:700;color:var(--n600);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:5px;}
+.edit-field input,.edit-field select,.edit-field textarea{
+  width:100%;font-family:'Inter',sans-serif;font-size:13px;
+  background:var(--n50);border:1.5px solid var(--n200);border-radius:10px;
+  padding:10px 12px;outline:none;color:var(--n900);transition:all 0.15s;
+  -webkit-appearance:none;appearance:none;
+}
+.edit-field input:focus,.edit-field select:focus,.edit-field textarea:focus{
+  border-color:var(--p400);background:white;box-shadow:0 0 0 3px rgba(168,85,247,0.1);
+}
+.edit-field textarea{min-height:64px;resize:none;}
+.edit-field-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.edit-freq-chips{display:flex;gap:6px;flex-wrap:wrap;}
+.edit-freq-chip{
+  font-size:11px;font-weight:600;padding:5px 12px;border-radius:99px;
+  border:1.5px solid var(--n200);background:white;color:var(--n600);cursor:pointer;
+  transition:all 0.15s;
+}
+.edit-freq-chip.active{background:var(--p600);border-color:var(--p600);color:white;}
+.edit-sheet-footer{padding:0 18px;display:flex;flex-direction:column;gap:8px;}
+.edit-save-btn{
+  width:100%;padding:14px;border-radius:14px;
+  background:linear-gradient(135deg,var(--p700),var(--p600));color:white;
+  font-weight:700;font-size:14px;border:none;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  box-shadow:0 4px 14px rgba(147,51,234,0.35);
+}
+.edit-save-btn i{width:16px;height:16px;}
+.edit-cancel-btn{
+  width:100%;padding:11px;background:transparent;border:none;
+  color:var(--n500);font-size:13px;font-weight:600;cursor:pointer;
+}
+
+/* ── SCREEN 4: SET TIMES ── */
+.s4{background:#FAF5FF;}
+.s4 .p-topbar{background:var(--p950);}
+.s4-body{flex:1;padding:16px;display:flex;flex-direction:column;gap:12px;}
+.time-section{background:white;border-radius:18px;overflow:hidden;border:1px solid var(--n100);}
+.time-section-header{
+  padding:12px 14px;display:flex;align-items:center;gap:10px;
+  border-bottom:1px solid var(--n100);
+}
+.time-section-icon{
+  width:32px;height:32px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.time-section-icon i{width:16px;height:16px;}
+.ts-morning .time-section-icon{background:#FEF3C7;}
+.ts-morning .time-section-icon i{color:#92400E;}
+.ts-evening .time-section-icon{background:#DBEAFE;}
+.ts-evening .time-section-icon i{color:#1E40AF;}
+.ts-night .time-section-icon{background:#EDE9FE;}
+.ts-night .time-section-icon i{color:#5B21B6;}
+.time-section-label{flex:1;}
+.time-section-name{font-size:13px;font-weight:700;color:var(--n900);}
+.time-section-meds{font-size:11px;color:var(--n500);margin-top:1px;}
+.time-picker-display{
+  background:var(--p50);border:1.5px solid var(--p200);
+  border-radius:10px;padding:6px 12px;
+  font-size:16px;font-weight:800;color:var(--p700);letter-spacing:0.02em;
+  cursor:pointer;
+}
+.time-meds-list{padding:10px 14px;display:flex;flex-direction:column;gap:6px;}
+.time-med-row{display:flex;align-items:center;gap:8px;}
+.time-med-dot{width:6px;height:6px;border-radius:50%;background:var(--p400);flex-shrink:0;}
+.time-med-name{font-size:12px;font-weight:600;color:var(--n700);}
+.time-med-dose{font-size:11px;color:var(--n400);margin-left:auto;}
+.time-med-instr{font-size:10px;color:var(--n400);width:100%;padding-left:14px;margin-top:-2px;font-style:italic;}
+.start-date-card{
+  background:white;border-radius:18px;padding:14px;
+  border:1px solid var(--n100);display:flex;align-items:center;gap:12px;
+}
+.start-date-icon{width:36px;height:36px;border-radius:10px;background:var(--p100);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.start-date-icon i{width:18px;height:18px;color:var(--p600);}
+.start-date-label{font-size:12px;color:var(--n500);font-weight:500;}
+.start-date-val{font-size:14px;font-weight:700;color:var(--n900);margin-top:1px;}
+.start-date-edit{margin-left:auto;font-size:12px;color:var(--p600);font-weight:600;cursor:pointer;}
+.notif-row{
+  background:white;border-radius:18px;padding:14px;
+  border:1px solid var(--n100);display:flex;align-items:center;gap:12px;
+}
+.notif-icon{width:36px;height:36px;border-radius:10px;background:var(--p100);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.notif-icon i{width:18px;height:18px;color:var(--p600);}
+.notif-text{flex:1;}
+.notif-label{font-size:13px;font-weight:700;color:var(--n900);}
+.notif-sub{font-size:11px;color:var(--n500);margin-top:1px;}
+.toggle-switch{
+  width:44px;height:24px;border-radius:99px;background:var(--p600);
+  position:relative;cursor:pointer;flex-shrink:0;transition:background 0.2s;
+}
+.toggle-switch.off{background:var(--n300);}
+.toggle-switch::after{
+  content:'';position:absolute;top:3px;left:22px;
+  width:18px;height:18px;border-radius:50%;background:white;
+  box-shadow:0 1px 3px rgba(0,0,0,0.2);transition:all 0.2s;
+}
+.toggle-switch.off::after{left:3px;}
+
+/* ── TIME PICKER SHEET ── */
+.tp-sheet-body{padding:0 18px 20px;display:flex;flex-direction:column;gap:14px;}
+.tp-slot-label{font-size:12px;font-weight:800;color:var(--n500);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:4px;}
+.tp-time-row{display:flex;align-items:center;gap:10px;}
+.tp-spinner{display:flex;flex-direction:column;align-items:center;gap:0;flex:1;}
+.tp-spinner-val{
+  font-size:32px;font-weight:800;color:var(--n900);line-height:1;
+  width:100%;text-align:center;padding:6px 0;
+}
+.tp-spinner-btn{
+  width:100%;padding:5px 0;border:none;background:var(--n100);border-radius:8px;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--n600);
+  font-size:13px;font-weight:700;
+}
+.tp-spinner-btn:hover{background:var(--p100);color:var(--p700);}
+.tp-colon{font-size:28px;font-weight:800;color:var(--n400);padding:0 2px;margin-top:28px;}
+.tp-period{display:flex;flex-direction:column;gap:6px;margin-top:28px;}
+.tp-period-btn{padding:8px 14px;border-radius:10px;border:1.5px solid var(--n200);font-size:13px;font-weight:700;color:var(--n500);cursor:pointer;background:white;}
+.tp-period-btn.active{background:var(--p600);border-color:var(--p600);color:white;}
+.tp-preview{background:var(--p50);border:1.5px solid var(--p200);border-radius:12px;padding:10px 14px;text-align:center;font-size:20px;font-weight:800;color:var(--p700);}
+.tp-save{width:100%;padding:13px;border-radius:12px;background:var(--p600);color:white;font-size:14px;font-weight:700;border:none;cursor:pointer;}
+
+/* ── DATE PICKER SHEET ── */
+.dp-sheet-body{padding:0 18px 20px;display:flex;flex-direction:column;gap:14px;}
+.dp-input-row{display:flex;gap:8px;}
+.dp-field{flex:1;display:flex;flex-direction:column;gap:5px;}
+.dp-field-label{font-size:11px;font-weight:700;color:var(--n500);}
+.dp-spinner-wrap{display:flex;flex-direction:column;align-items:center;gap:3px;}
+.dp-val{font-size:22px;font-weight:800;color:var(--n900);text-align:center;padding:4px 0;}
+.dp-btn{width:100%;padding:5px;border:none;background:var(--n100);border-radius:8px;cursor:pointer;font-size:12px;font-weight:700;color:var(--n600);}
+.dp-btn:hover{background:var(--p100);color:var(--p700);}
+.dp-preview{background:var(--p50);border:1.5px solid var(--p200);border-radius:12px;padding:10px 14px;text-align:center;font-size:15px;font-weight:700;color:var(--p700);}
+.dp-save{width:100%;padding:13px;border-radius:12px;background:var(--p600);color:white;font-size:14px;font-weight:700;border:none;cursor:pointer;}
+
+/* ── SCREEN 5: SUCCESS ── */
+.s5{background:var(--p950);}
+.s5-body{flex:1;padding:24px 20px;display:flex;flex-direction:column;align-items:center;gap:20px;}
+.success-icon-wrap{
+  width:80px;height:80px;border-radius:50%;
+  background:linear-gradient(135deg,var(--success),#059669);
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 8px 24px rgba(16,185,129,0.4);
+  animation:successPop 0.5s cubic-bezier(0.175,0.885,0.32,1.275) both;
+}
+@keyframes successPop{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}
+.success-icon-wrap i{width:36px;height:36px;color:white;}
+.success-title{font-size:24px;font-weight:900;color:white;text-align:center;letter-spacing:-0.02em;}
+.success-sub{font-size:13px;color:rgba(255,255,255,0.5);text-align:center;line-height:1.55;max-width:260px;}
+.reminder-summary{width:100%;background:rgba(255,255,255,0.06);
+  border:1px solid rgba(255,255,255,0.1);border-radius:20px;overflow:hidden;}
+.reminder-summary-header{
+  padding:14px 16px;font-size:13px;font-weight:700;color:rgba(255,255,255,0.9);
+  border-bottom:1px solid rgba(255,255,255,0.08);
+  display:flex;align-items:center;gap:8px;
+}
+.reminder-summary-header i{width:16px;height:16px;color:var(--a400);}
+.reminder-slot{
+  padding:12px 16px;display:flex;align-items:flex-start;gap:12px;
+  border-bottom:1px solid rgba(255,255,255,0.06);
+}
+.reminder-slot:last-child{border-bottom:none;}
+.slot-time-badge{
+  background:rgba(255,255,255,0.1);border-radius:8px;padding:6px 10px;
+  text-align:center;min-width:56px;flex-shrink:0;
+}
+.slot-time-badge .time{font-size:14px;font-weight:800;color:white;line-height:1;}
+.slot-time-badge .period{font-size:9px;color:rgba(255,255,255,0.5);font-weight:600;text-transform:uppercase;margin-top:2px;}
+.slot-meds{flex:1;}
+.slot-med-name{font-size:12px;font-weight:600;color:rgba(255,255,255,0.85);line-height:1.5;}
+.next-reminder{
+  background:linear-gradient(135deg,rgba(168,85,247,0.2),rgba(232,121,249,0.1));
+  border:1px solid rgba(168,85,247,0.3);border-radius:16px;padding:14px;
+  width:100%;display:flex;align-items:center;gap:12px;
+}
+.next-reminder-icon{width:36px;height:36px;border-radius:10px;background:var(--p600);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.next-reminder-icon i{width:18px;height:18px;color:white;}
+.next-reminder-label{font-size:11px;color:rgba(255,255,255,0.5);font-weight:500;}
+.next-reminder-val{font-size:13px;font-weight:700;color:white;margin-top:2px;}
+.s5-ctas{width:100%;display:flex;flex-direction:column;gap:10px;margin-top:auto;}
+
+/* ── RIGHT PANEL ── */
+.right-panel{}
+.screen-info{
+  background:white;border-radius:24px;padding:28px;
+  box-shadow:0 2px 12px rgba(168,85,247,0.08);
+  border:1px solid var(--p100);margin-bottom:24px;
+}
+.screen-badge{
+  display:inline-flex;align-items:center;gap:6px;
+  background:var(--p100);color:var(--p700);font-size:11px;font-weight:700;
+  text-transform:uppercase;letter-spacing:0.06em;padding:4px 12px;border-radius:99px;
+  margin-bottom:14px;
+}
+.screen-badge i{width:12px;height:12px;}
+.screen-title{font-size:22px;font-weight:800;color:var(--n900);letter-spacing:-0.02em;margin-bottom:8px;}
+.screen-desc{font-size:14px;color:var(--n500);line-height:1.65;margin-bottom:20px;}
+.ux-notes{display:flex;flex-direction:column;gap:10px;}
+.ux-note{
+  display:flex;gap:12px;align-items:flex-start;
+  background:var(--n50);border-radius:14px;padding:12px 14px;
+  border:1px solid var(--n100);
+}
+.ux-note-icon{width:28px;height:28px;border-radius:8px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;}
+.ux-note-icon i{width:14px;height:14px;}
+.ux-note-icon.purple{background:var(--p100);}
+.ux-note-icon.purple i{color:var(--p600);}
+.ux-note-icon.green{background:#D1FAE5;}
+.ux-note-icon.green i{color:var(--success);}
+.ux-note-icon.orange{background:#FEF3C7;}
+.ux-note-icon.orange i{color:#D97706;}
+.ux-note-icon.red{background:#FEE2E2;}
+.ux-note-icon.red i{color:var(--error);}
+.ux-note-body .label{font-size:12px;font-weight:700;color:var(--n800);}
+.ux-note-body .text{font-size:12px;color:var(--n500);margin-top:2px;line-height:1.5;}
+.nav-btns{display:flex;gap:12px;margin-top:24px;}
+.nav-btn{
+  flex:1;padding:14px;border-radius:14px;font-size:14px;font-weight:700;
+  cursor:pointer;border:none;transition:all 0.15s;display:flex;align-items:center;justify-content:center;gap:8px;
+}
+.nav-btn-prev{background:white;color:var(--p700);border:1.5px solid var(--p200);}
+.nav-btn-prev:hover{background:var(--p50);}
+.nav-btn-prev:disabled{opacity:0.4;cursor:not-allowed;}
+.nav-btn-next{background:linear-gradient(135deg,var(--p700),var(--p600));color:white;
+  box-shadow:0 4px 14px rgba(147,51,234,0.35);}
+.nav-btn-next:hover{box-shadow:0 6px 18px rgba(147,51,234,0.45);transform:translateY(-1px);}
+.nav-btn i{width:16px;height:16px;}
+
+/* prescription data card */
+.rx-data-card{
+  background:white;border-radius:24px;padding:24px;
+  border:1px solid var(--p100);box-shadow:0 2px 12px rgba(168,85,247,0.06);
+}
+.rx-data-title{font-size:15px;font-weight:800;color:var(--n900);margin-bottom:16px;
+  display:flex;align-items:center;gap:8px;}
+.rx-data-title i{width:18px;height:18px;color:var(--p600);}
+.rx-table{width:100%;border-collapse:collapse;}
+.rx-table th{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;
+  color:var(--n500);padding:0 12px 10px;text-align:left;border-bottom:1px solid var(--n100);}
+.rx-table td{padding:10px 12px;font-size:13px;border-bottom:1px solid var(--n50);vertical-align:top;}
+.rx-table tr:last-child td{border-bottom:none;}
+.rx-med-name{font-weight:700;color:var(--n900);}
+.rx-med-dose{color:var(--n500);font-size:12px;margin-top:1px;}
+.rx-freq-badge{display:inline-flex;align-items:center;font-size:11px;font-weight:600;padding:2px 8px;border-radius:99px;}
+.allergy-chip{
+  display:inline-flex;align-items:center;gap:5px;
+  background:#FEE2E2;color:#991B1B;font-size:11px;font-weight:700;
+  padding:4px 10px;border-radius:99px;border:1px solid #FECACA;
+}
+.allergy-chip i{width:12px;height:12px;}
+
+@media(max-width:900px){
+  .main{grid-template-columns:1fr;padding:0 20px 60px;}
+  .phone-wrap{position:static;display:flex;justify-content:center;}
+  .flow-wrap{padding:24px 20px 0;}
+}
+
+
+/* ── MOBILE RESET ── */
+html, body {
+  margin: 0; padding: 0;
+  width: 100%; height: 100%;
+  overflow: hidden;
+  background: #FAF5FF;
+  font-family: 'Inter', sans-serif;
+}
+
+/* Screen fills full viewport */
+.phone-screen {
+  width: 100vw;
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: none;
+  flex-direction: column;
+  position: relative;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+}
+.phone-screen.active { display: flex; }
+
+/* Progress bar at top */
+#progress-bar-wrap {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: rgba(168,85,247,0.15);
+  z-index: 999;
+}
+#progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #7E22CE, #A855F7);
+  transition: width 0.4s ease;
+}
+
+/* Bump topbar padding to account for real status bar */
+.p-topbar { padding-top: max(48px, env(safe-area-inset-top, 48px)); }
+
+/* Bottom safe area for CTA buttons */
+.p-cta, .p-cta-secondary {
+  margin-bottom: max(20px, env(safe-area-inset-bottom, 20px));
+}
+
+</style>
+</head>
+<body>
+
+<!-- Progress bar -->
+<div id="progress-bar-wrap"><div id="progress-bar-fill" style="width:20%"></div></div>
+
+<!-- ── SCREEN 1: UPLOAD ── -->
+      <div class="phone-screen s1 active" id="screen-0">
+        <div class="p-topbar dark">
+          <div class="p-back dark-btn" onclick="prevScreen()" title="Back"><i data-lucide="arrow-left"></i></div>
+          <span class="p-topbar-title white">Add Prescription</span>
+          <div class="p-topbar-right">
+            <div style="width:32px;height:32px;border-radius:10px;background:rgba(255,255,255,0.12);display:flex;align-items:center;justify-content:center;">
+              <i data-lucide="help-circle" style="width:16px;height:16px;color:rgba(255,255,255,0.7)"></i>
+            </div>
+          </div>
+        </div>
+        <div class="s1-body">
+          <div class="upload-zone" id="upload-zone" onclick="openSourcePicker('files')">
+            <div class="upload-icon-wrap" id="upload-icon-wrap"><i data-lucide="scan-line" id="upload-zone-icon"></i></div>
+            <div class="upload-title" id="upload-zone-title">Scan or Upload</div>
+            <div class="upload-sub" id="upload-zone-sub">Take a photo, upload a file, or import from cloud storage</div>
+            <div class="upload-formats" id="upload-formats">
+              <span class="upload-fmt">PDF</span>
+              <span class="upload-fmt">JPG</span>
+              <span class="upload-fmt">PNG</span>
+              <span class="upload-fmt">HEIC</span>
+            </div>
+            <!-- shown when file is selected -->
+            <div class="file-selected-info" id="file-selected-info" style="display:none;">
+              <div class="file-selected-info-text">
+                <div class="file-selected-name" id="file-selected-name">—</div>
+                <div class="file-selected-source" id="file-selected-source">—</div>
+              </div>
+              <span class="file-ready-tag">Ready</span>
+              <button class="file-selected-remove" onclick="clearFile(event)" title="Remove">
+                <i data-lucide="x"></i>
+              </button>
+            </div>
+          </div>
+          <div class="divider-or">or choose a source</div>
+          <div class="source-btns">
+            <div class="source-btn" id="src-btn-camera" onclick="openSourcePicker('camera')">
+              <i data-lucide="camera"></i>
+              <span>Camera</span>
+            </div>
+            <div class="source-btn" id="src-btn-gallery" onclick="openSourcePicker('gallery')">
+              <i data-lucide="image"></i>
+              <span>Gallery</span>
+            </div>
+            <div class="source-btn" id="src-btn-files" onclick="openSourcePicker('files')">
+              <i data-lucide="folder-open"></i>
+              <span>Files</span>
+            </div>
+          </div>
+
+          <!-- ── SOURCE PICKER BACKDROP ── -->
+          <div class="edit-backdrop" id="source-picker-backdrop" onclick="closeSourcePicker()"></div>
+
+          <!-- ── CAMERA PICKER SHEET ── -->
+          <div class="source-picker-sheet" id="camera-picker-sheet">
+            <div class="source-picker-header">
+              <span class="source-picker-title">Take a Photo</span>
+              <button class="source-picker-close" onclick="closeSourcePicker()"><i data-lucide="x"></i></button>
+            </div>
+            <div class="source-picker-body">
+              <div class="camera-viewfinder">
+                <div class="camera-doc-preview">
+                  <div class="camera-doc-line"></div>
+                  <div class="camera-doc-line short"></div>
+                  <div class="camera-doc-line"></div>
+                  <div class="camera-doc-line short"></div>
+                  <div class="camera-doc-line"></div>
+                  <div class="camera-doc-line short"></div>
+                </div>
+                <div class="camera-scan-bar"></div>
+                <div class="camera-corners">
+                  <div class="cam-corner tl"></div>
+                  <div class="cam-corner tr"></div>
+                  <div class="cam-corner bl"></div>
+                  <div class="cam-corner br"></div>
+                </div>
+                <div class="camera-badge">Prescription Detected</div>
+              </div>
+              <div style="font-size:11px;color:var(--n400);text-align:center;">Position the prescription within the frame</div>
+              <button class="camera-capture-btn" onclick="confirmPick('camera','Photo_20260624_0941.jpg','Camera · Just now')">
+                <i data-lucide="camera"></i> Capture Prescription
+              </button>
+            </div>
+          </div>
+
+          <!-- ── GALLERY PICKER SHEET ── -->
+          <div class="source-picker-sheet" id="gallery-picker-sheet">
+            <div class="source-picker-header">
+              <span class="source-picker-title">Choose from Gallery</span>
+              <button class="source-picker-close" onclick="closeSourcePicker()"><i data-lucide="x"></i></button>
+            </div>
+            <div class="source-picker-body">
+              <div class="gallery-grid" id="gallery-grid">
+                <!-- 6 thumbnails injected by JS -->
+              </div>
+              <button class="gallery-select-btn" id="gallery-select-btn" onclick="confirmGalleryPick()">
+                <i data-lucide="image"></i> Use Selected Photo
+              </button>
+            </div>
+          </div>
+
+          <!-- ── FILES PICKER SHEET ── -->
+          <div class="source-picker-sheet" id="files-picker-sheet">
+            <div class="source-picker-header">
+              <span class="source-picker-title">Browse Files</span>
+              <button class="source-picker-close" onclick="closeSourcePicker()"><i data-lucide="x"></i></button>
+            </div>
+            <div class="source-picker-body">
+              <div class="file-list" id="file-list">
+                <div class="file-list-item selected" id="fitem-0" onclick="selectFileItem(0)">
+                  <div class="file-item-icon" style="background:#FEE2E2;"><i data-lucide="file-text" style="color:#DC2626;"></i></div>
+                  <div class="file-item-info">
+                    <div class="file-item-name">RX_Apollo_May2026.pdf</div>
+                    <div class="file-item-meta">PDF · 1.2 MB · 28 May 2026</div>
+                  </div>
+                  <div class="file-item-check"><i data-lucide="check"></i></div>
+                </div>
+                <div class="file-list-item" id="fitem-1" onclick="selectFileItem(1)">
+                  <div class="file-item-icon" style="background:#DBEAFE;"><i data-lucide="file-text" style="color:#2563EB;"></i></div>
+                  <div class="file-item-info">
+                    <div class="file-item-name">prescription_cardio.pdf</div>
+                    <div class="file-item-meta">PDF · 856 KB · 12 Apr 2026</div>
+                  </div>
+                  <div class="file-item-check"><i data-lucide="check"></i></div>
+                </div>
+                <div class="file-list-item" id="fitem-2" onclick="selectFileItem(2)">
+                  <div class="file-item-icon" style="background:#F3F4F6;"><i data-lucide="image" style="color:#6B7280;"></i></div>
+                  <div class="file-item-info">
+                    <div class="file-item-name">scan001_rx.jpg</div>
+                    <div class="file-item-meta">JPG · 2.4 MB · 5 Mar 2026</div>
+                  </div>
+                  <div class="file-item-check"><i data-lucide="check"></i></div>
+                </div>
+                <div class="file-list-item" id="fitem-3" onclick="selectFileItem(3)">
+                  <div class="file-item-icon" style="background:#F3F4F6;"><i data-lucide="image" style="color:#6B7280;"></i></div>
+                  <div class="file-item-info">
+                    <div class="file-item-name">IMG_20260118_rx.heic</div>
+                    <div class="file-item-meta">HEIC · 3.1 MB · 18 Jan 2026</div>
+                  </div>
+                  <div class="file-item-check"><i data-lucide="check"></i></div>
+                </div>
+              </div>
+              <button class="file-open-btn ready" id="file-open-btn" onclick="confirmFilePick()">
+                <i data-lucide="folder-open"></i> Open File
+              </button>
+            </div>
+          </div>
+          <div>
+            <div class="recent-header">
+              <span>Recent Prescriptions</span>
+              <a href="#">See all</a>
+            </div>
+          </div>
+          <div class="recent-rx">
+            <div class="recent-rx-icon"><i data-lucide="file-text"></i></div>
+            <div class="recent-rx-info">
+              <div class="recent-rx-name">Dr. Ananya Krishnamurthy</div>
+              <div class="recent-rx-meta">RX-2026-00847 · 28 May 2026</div>
+            </div>
+            <div class="recent-rx-actions">
+              <span class="recent-rx-badge">Active</span>
+              <button class="recent-rx-view" onclick="openRxDetail()"><i data-lucide="eye"></i> View</button>
+            </div>
+          </div>
+
+          <!-- ── RX DETAIL BACKDROP ── -->
+          <div class="edit-backdrop" id="rx-detail-backdrop" onclick="closeRxDetail()"></div>
+
+          <!-- ── RX DETAIL SHEET ── -->
+          <div class="edit-sheet" id="rx-detail-sheet">
+            <div class="edit-sheet-handle"></div>
+            <div class="edit-sheet-header">
+              <span class="edit-sheet-title">Prescription Details</span>
+              <button class="edit-sheet-close" onclick="closeRxDetail()"><i data-lucide="x"></i></button>
+            </div>
+            <div class="rx-detail-sheet-body">
+
+              <!-- Hero card -->
+              <div class="rx-detail-hero">
+                <div class="rx-detail-doctor">Dr. Ananya Krishnamurthy</div>
+                <div class="rx-detail-spec">MD Internal Medicine · Apollo Spectra Hospitals, Bengaluru</div>
+                <div class="rx-detail-chips">
+                  <span class="rx-detail-chip"><i data-lucide="hash"></i>RX-2026-00847</span>
+                  <span class="rx-detail-chip"><i data-lucide="calendar"></i>28 May 2026</span>
+                  <span class="rx-detail-chip"><i data-lucide="clock"></i>Valid 30 days</span>
+                  <span class="rx-detail-chip"><i data-lucide="pill"></i>6 Medicines</span>
+                </div>
+              </div>
+
+              <!-- Medicines list -->
+              <div class="rx-detail-section-title">Medicines Prescribed</div>
+
+              <div class="rx-detail-med-row">
+                <div class="rx-detail-med-num">1</div>
+                <div>
+                  <div class="rx-detail-cond cond-diabetes"><i data-lucide="activity"></i>Type 2 Diabetes</div>
+                  <div class="rx-detail-med-name">Metformin 500 mg</div>
+                  <div class="rx-detail-med-ing">Active Ingredient: Metformin Hydrochloride</div>
+                  <div class="rx-detail-med-tags">
+                    <span class="rx-detail-med-tag">Twice Daily</span>
+                    <span class="rx-detail-med-tag">90 days</span>
+                    <span class="rx-detail-med-tag">With meals</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="rx-detail-med-row">
+                <div class="rx-detail-med-num">2</div>
+                <div>
+                  <div class="rx-detail-cond cond-diabetes"><i data-lucide="activity"></i>Type 2 Diabetes</div>
+                  <div class="rx-detail-med-name">Glimepiride 2 mg</div>
+                  <div class="rx-detail-med-ing">Active Ingredient: Glimepiride</div>
+                  <div class="rx-detail-med-tags">
+                    <span class="rx-detail-med-tag">Morning</span>
+                    <span class="rx-detail-med-tag">90 days</span>
+                    <span class="rx-detail-med-tag">Before breakfast</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="rx-detail-med-row">
+                <div class="rx-detail-med-num">3</div>
+                <div>
+                  <div class="rx-detail-cond cond-hyper"><i data-lucide="heart-pulse"></i>Essential Hypertension</div>
+                  <div class="rx-detail-med-name">Telmisartan 40 mg</div>
+                  <div class="rx-detail-med-ing">Active Ingredient: Telmisartan</div>
+                  <div class="rx-detail-med-tags">
+                    <span class="rx-detail-med-tag">Morning</span>
+                    <span class="rx-detail-med-tag">90 days</span>
+                    <span class="rx-detail-med-tag">Same time daily</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="rx-detail-med-row">
+                <div class="rx-detail-med-num">4</div>
+                <div>
+                  <div class="rx-detail-cond cond-hyper"><i data-lucide="heart-pulse"></i>Essential Hypertension</div>
+                  <div class="rx-detail-med-name">Amlodipine 5 mg</div>
+                  <div class="rx-detail-med-ing">Active Ingredient: Amlodipine Besylate</div>
+                  <div class="rx-detail-med-tags">
+                    <span class="rx-detail-med-tag">Evening</span>
+                    <span class="rx-detail-med-tag">90 days</span>
+                    <span class="rx-detail-med-tag">If BP &gt; 140/90</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="rx-detail-med-row">
+                <div class="rx-detail-med-num">5</div>
+                <div>
+                  <div class="rx-detail-cond cond-neuro"><i data-lucide="brain"></i>Peripheral Neuropathy</div>
+                  <div class="rx-detail-med-name">Methylcobalamin 1500 mcg</div>
+                  <div class="rx-detail-med-ing">Active Ingredient: Methylcobalamin</div>
+                  <div class="rx-detail-med-tags">
+                    <span class="rx-detail-med-tag">Night</span>
+                    <span class="rx-detail-med-tag">60 days</span>
+                    <span class="rx-detail-med-tag">With food</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="rx-detail-med-row">
+                <div class="rx-detail-med-num">6</div>
+                <div>
+                  <div class="rx-detail-cond cond-gastric"><i data-lucide="shield-plus"></i>Gastric Protection</div>
+                  <div class="rx-detail-med-name">Pantoprazole 40 mg</div>
+                  <div class="rx-detail-med-ing">Active Ingredient: Pantoprazole Sodium</div>
+                  <div class="rx-detail-med-tags">
+                    <span class="rx-detail-med-tag">Morning</span>
+                    <span class="rx-detail-med-tag">30 days</span>
+                    <span class="rx-detail-med-tag">30 min before breakfast</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Footer -->
+              <div class="rx-detail-footer">
+                <i data-lucide="shield-check"></i>
+                <span>Prescription verified · Digital signature valid · Uploaded 28 May 2026</span>
+              </div>
+
+            </div>
+          </div>
+        </div>
+        <button class="p-cta" id="scan-cta-btn" onclick="nextScreen()" style="opacity:0.45;pointer-events:none;">
+          <i data-lucide="scan-line"></i> <span id="scan-cta-label">Choose a file to continue</span>
+        </button>
+        <button class="p-cta-secondary" onclick="openManualEntry()">
+          <i data-lucide="keyboard"></i> Enter Manually
+        </button>
+      </div>
+
+      <!-- ── SCREEN 2: SCANNING ── -->
+      <div class="phone-screen s2" id="screen-1">
+        <div class="p-topbar" style="padding-top:52px;padding-bottom:12px;">
+          <div class="p-back" style="background:rgba(255,255,255,0.1);border-radius:10px;cursor:pointer;" onclick="prevScreen()" title="Cancel">
+            <i data-lucide="x" style="width:18px;height:18px;color:white"></i>
+          </div>
+          <span style="color:rgba(255,255,255,0.7);font-size:14px;font-weight:600;">Processing…</span>
+        </div>
+        <div class="s2-body">
+          <div class="scan-doc-wrap">
+            <div class="scan-doc-inner">
+              <div class="scan-doc-header">
+                <div class="scan-doc-header-text">Dr. Ananya Krishnamurthy · Apollo Spectra Hospitals<br>RX-2026-00847 · 28 May 2026</div>
+              </div>
+              <div class="scan-doc-row">
+                <span class="scan-doc-label">Patient</span>
+                <span class="scan-doc-val">Ravi Subramaniam · 58M</span>
+              </div>
+              <div class="scan-doc-rx-title">Rx — Medications</div>
+              <div class="scan-doc-med"><span class="scan-doc-med-name">Metformin 500mg</span><span class="scan-doc-med-dose">BD · 90d</span></div>
+              <div class="scan-doc-med"><span class="scan-doc-med-name">Glimepiride 2mg</span><span class="scan-doc-med-dose">OD · 90d</span></div>
+              <div class="scan-doc-med"><span class="scan-doc-med-name">Telmisartan 40mg</span><span class="scan-doc-med-dose">OD · 90d</span></div>
+              <div class="scan-doc-med"><span class="scan-doc-med-name">Amlodipine 5mg</span><span class="scan-doc-med-dose">OD · 90d</span></div>
+              <div class="scan-doc-med"><span class="scan-doc-med-name">Methylcobalamin</span><span class="scan-doc-med-dose">OD · 60d</span></div>
+              <div class="scan-doc-med"><span class="scan-doc-med-name">Pantoprazole 40mg</span><span class="scan-doc-med-dose">OD · 30d</span></div>
+            </div>
+            <div class="scan-line"></div>
+            <div class="scan-corners">
+              <div class="corner corner-tl"></div>
+              <div class="corner corner-tr"></div>
+              <div class="corner corner-bl"></div>
+              <div class="corner corner-br"></div>
+            </div>
+          </div>
+          <div class="scan-title" id="scan-title">Analysing Prescription</div>
+          <div class="scan-sub" id="scan-sub">AI is reading your document…</div>
+          <div class="scan-steps" id="scan-steps">
+
+            <!-- Step 1: Detect -->
+            <div class="scan-step" id="sstep-0">
+              <div class="scan-step-icon done"><i data-lucide="scan-line"></i></div>
+              <div class="scan-step-text">
+                <div class="scan-step-label">Document Verified</div>
+                <div class="scan-step-sub">Valid prescription PDF · Dr. Ananya Krishnamurthy</div>
+              </div>
+              <div class="scan-step-check"><i data-lucide="circle-check"></i></div>
+            </div>
+
+            <!-- Step 2: AI Extract -->
+            <div class="scan-step" id="sstep-1">
+              <div class="scan-step-icon pending" id="sicon-1"><i data-lucide="brain-circuit"></i></div>
+              <div class="scan-step-text">
+                <div class="scan-step-label">AI Extracting Medicines</div>
+                <div class="scan-step-sub" id="ssub-1">Waiting…</div>
+              </div>
+              <div class="scan-step-check" id="scheck-1" style="opacity:0"><i data-lucide="circle-check"></i></div>
+            </div>
+
+            <!-- Step 3: Salt Lookup -->
+            <div class="scan-step" id="sstep-2">
+              <div class="scan-step-icon pending" id="sicon-2"><i data-lucide="flask-conical"></i></div>
+              <div class="scan-step-text">
+                <div class="scan-step-label">Checking Active Ingredients</div>
+                <div class="scan-step-sub" id="ssub-2">Waiting…</div>
+              </div>
+              <div class="scan-step-check" id="scheck-2" style="opacity:0"><i data-lucide="circle-check"></i></div>
+            </div>
+
+            <!-- Step 4: Vault conflict check -->
+            <div class="scan-step" id="sstep-3">
+              <div class="scan-step-icon pending" id="sicon-3"><i data-lucide="shield-alert"></i></div>
+              <div class="scan-step-text">
+                <div class="scan-step-label">Checking Your Vault</div>
+                <div class="scan-step-sub" id="ssub-3">Scanning for duplicate salts…</div>
+              </div>
+              <div class="scan-step-check" id="scheck-3" style="opacity:0"><i data-lucide="circle-check"></i></div>
+            </div>
+
+            <!-- Step 5: Ready -->
+            <div class="scan-step" id="sstep-4">
+              <div class="scan-step-icon pending" id="sicon-4"><i data-lucide="bell"></i></div>
+              <div class="scan-step-text">
+                <div class="scan-step-label">Ready to Review</div>
+                <div class="scan-step-sub" id="ssub-4">Building your summary…</div>
+              </div>
+              <div class="scan-step-check" id="scheck-4" style="opacity:0"><i data-lucide="circle-check"></i></div>
+            </div>
+
+          </div>
+          <div class="scan-progress-wrap">
+            <div class="scan-progress-track"><div class="scan-progress-fill" id="scan-progress-fill"></div></div>
+            <div class="scan-progress-label" id="scan-progress-label">Starting analysis…</div>
+          </div>
+
+          <!-- conflict found pill (hidden until step 4) -->
+          <div id="conflict-found-pill" style="display:none;margin-top:12px;background:rgba(251,146,60,0.15);border:1px solid rgba(251,146,60,0.4);border-radius:99px;padding:7px 14px;display:none;align-items:center;gap:7px;">
+            <i data-lucide="alert-triangle" style="width:14px;height:14px;color:#FB923C;flex-shrink:0;"></i>
+            <span style="font-size:11px;font-weight:700;color:#FDBA74;">1 ingredient conflict found — Metformin HCl</span>
+          </div>
+        </div>
+        <button class="p-cta" id="scan-continue-btn" style="margin:0 20px 32px;opacity:0.45;pointer-events:none;" onclick="nextScreen()">
+          <i data-lucide="arrow-right"></i> <span id="scan-continue-label">Analysing…</span>
+        </button>
+      </div>
+
+      <!-- ── SCREEN 3: REVIEW ── -->
+      <div class="phone-screen s3" id="screen-2" style="position:relative;overflow:hidden;">
+        <div class="p-topbar dark">
+          <div class="p-back dark-btn" onclick="prevScreen()" title="Back"><i data-lucide="arrow-left"></i></div>
+          <span class="p-topbar-title white">Review Medications</span>
+        </div>
+        <div class="s3-body">
+          <div class="rx-meta-card">
+            <div class="rx-meta-top">
+              <div>
+                <div class="rx-doctor-name">Dr. Ananya Krishnamurthy</div>
+                <div class="rx-doctor-spec">MD Internal Medicine · Apollo Spectra, Bengaluru</div>
+              </div>
+              <div class="rx-verified"><i data-lucide="shield-check"></i> Verified</div>
+            </div>
+            <div class="rx-meta-row">
+              <span class="rx-chip"><i data-lucide="hash"></i>RX-2026-00847</span>
+              <span class="rx-chip"><i data-lucide="calendar"></i>28 May 2026</span>
+              <span class="rx-chip"><i data-lucide="clock"></i>30 days valid</span>
+            </div>
+          </div>
+          <div class="allergy-banner">
+            <div class="allergy-banner-icon"><i data-lucide="triangle-alert"></i></div>
+            <div class="allergy-banner-text">
+              <div class="title">Allergy Alert — Penicillin</div>
+              <div class="sub">Anaphylaxis risk. Avoid all penicillin-class antibiotics.</div>
+            </div>
+          </div>
+          <div class="conflict-banner" onclick="openConflict(0)">
+            <div class="conflict-banner-icon"><i data-lucide="alert-triangle"></i></div>
+            <div class="conflict-banner-body">
+              <div class="conflict-banner-title">1 Salt Conflict Detected</div>
+              <div class="conflict-banner-sub">Metformin HCl already prescribed by Dr. Ramesh Kumar (Glycomet 850mg). Taking both may cause overdose.</div>
+              <span class="conflict-banner-link">Review &amp; resolve conflict →</span>
+            </div>
+          </div>
+          <div class="found-header">
+            <span class="found-title">6 Medications Found</span>
+            <span class="found-count" id="med-selected-count">All selected</span>
+          </div>
+          <div class="med-list">
+            <div class="med-card selected has-conflict" onclick="toggleMed(this)">
+              <div class="med-card-toggle" onclick="toggleMed(this)"><i data-lucide="check"></i></div>
+              <div class="med-card-body" onclick="toggleMed(this)">
+                <div class="med-condition cond-diabetes"><i data-lucide="activity"></i>Type 2 Diabetes Mellitus</div>
+                <div class="med-card-name" onclick="toggleMed(this)">Metformin 500 mg</div>
+                <div class="med-salt"><i data-lucide="flask-conical"></i>Active Ingredient: Metformin Hydrochloride</div>
+                <div class="med-card-dose" onclick="toggleMed(this)">500 mg · Oral</div>
+                <div class="med-card-tags" onclick="toggleMed(this)">
+                  <span class="med-tag tag-twice">Twice Daily</span>
+                  <span class="med-tag tag-days">90 days</span>
+                </div>
+                <div class="med-card-instr" onclick="toggleMed(this)">With meals. Do not crush.</div>
+                <div class="conflict-badge" onclick="openConflict(0)"><i data-lucide="alert-triangle"></i>Same salt in vault — Glycomet 850 (Dr. Ramesh Kumar) · Tap to resolve</div>
+              </div>
+              <button class="med-card-edit" onclick="openEdit(0)" title="Edit"><i data-lucide="pencil"></i></button>
+            </div>
+            <div class="med-card selected" onclick="toggleMed(this)">
+              <div class="med-card-toggle" onclick="toggleMed(this)"><i data-lucide="check"></i></div>
+              <div class="med-card-body" onclick="toggleMed(this)">
+                <div class="med-condition cond-diabetes"><i data-lucide="activity"></i>Type 2 Diabetes Mellitus</div>
+                <div class="med-card-name" onclick="toggleMed(this)">Glimepiride 2 mg</div>
+                <div class="med-salt"><i data-lucide="flask-conical"></i>Active Ingredient: Glimepiride</div>
+                <div class="med-card-dose" onclick="toggleMed(this)">2 mg · Oral</div>
+                <div class="med-card-tags" onclick="toggleMed(this)">
+                  <span class="med-tag tag-morning">Morning</span>
+                  <span class="med-tag tag-days">90 days</span>
+                </div>
+                <div class="med-card-instr" onclick="toggleMed(this)">Before breakfast. Monitor BS.</div>
+              </div>
+              <button class="med-card-edit" onclick="openEdit(1)" title="Edit"><i data-lucide="pencil"></i></button>
+            </div>
+            <div class="med-card selected" onclick="toggleMed(this)">
+              <div class="med-card-toggle" onclick="toggleMed(this)"><i data-lucide="check"></i></div>
+              <div class="med-card-body" onclick="toggleMed(this)">
+                <div class="med-condition cond-hyper"><i data-lucide="heart-pulse"></i>Essential Hypertension</div>
+                <div class="med-card-name" onclick="toggleMed(this)">Telmisartan 40 mg</div>
+                <div class="med-salt"><i data-lucide="flask-conical"></i>Active Ingredient: Telmisartan</div>
+                <div class="med-card-dose" onclick="toggleMed(this)">40 mg · Oral</div>
+                <div class="med-card-tags" onclick="toggleMed(this)">
+                  <span class="med-tag tag-morning">Morning</span>
+                  <span class="med-tag tag-days">90 days</span>
+                </div>
+                <div class="med-card-instr" onclick="toggleMed(this)">Same time daily. Avoid K+ foods.</div>
+              </div>
+              <button class="med-card-edit" onclick="openEdit(2)" title="Edit"><i data-lucide="pencil"></i></button>
+            </div>
+            <div class="med-card selected" onclick="toggleMed(this)">
+              <div class="med-card-toggle" onclick="toggleMed(this)"><i data-lucide="check"></i></div>
+              <div class="med-card-body" onclick="toggleMed(this)">
+                <div class="med-condition cond-hyper"><i data-lucide="heart-pulse"></i>Essential Hypertension</div>
+                <div class="med-card-name" onclick="toggleMed(this)">Amlodipine 5 mg</div>
+                <div class="med-salt"><i data-lucide="flask-conical"></i>Active Ingredient: Amlodipine Besylate</div>
+                <div class="med-card-dose" onclick="toggleMed(this)">5 mg · Oral</div>
+                <div class="med-card-tags" onclick="toggleMed(this)">
+                  <span class="med-tag tag-evening">Evening</span>
+                  <span class="med-tag tag-days">90 days</span>
+                </div>
+                <div class="med-card-instr" onclick="toggleMed(this)">If BP &gt; 140/90. Log readings.</div>
+              </div>
+              <button class="med-card-edit" onclick="openEdit(3)" title="Edit"><i data-lucide="pencil"></i></button>
+            </div>
+            <div class="med-card selected" onclick="toggleMed(this)">
+              <div class="med-card-toggle" onclick="toggleMed(this)"><i data-lucide="check"></i></div>
+              <div class="med-card-body" onclick="toggleMed(this)">
+                <div class="med-condition cond-neuro"><i data-lucide="brain"></i>Peripheral Neuropathy (Diabetic)</div>
+                <div class="med-card-name" onclick="toggleMed(this)">Methylcobalamin 1500 mcg</div>
+                <div class="med-salt"><i data-lucide="flask-conical"></i>Active Ingredient: Methylcobalamin</div>
+                <div class="med-card-dose" onclick="toggleMed(this)">1500 mcg · Oral</div>
+                <div class="med-card-tags" onclick="toggleMed(this)">
+                  <span class="med-tag tag-night">Night</span>
+                  <span class="med-tag tag-days">60 days</span>
+                </div>
+                <div class="med-card-instr" onclick="toggleMed(this)">For neuropathy. With food.</div>
+              </div>
+              <button class="med-card-edit" onclick="openEdit(4)" title="Edit"><i data-lucide="pencil"></i></button>
+            </div>
+            <div class="med-card selected" onclick="toggleMed(this)">
+              <div class="med-card-toggle" onclick="toggleMed(this)"><i data-lucide="check"></i></div>
+              <div class="med-card-body" onclick="toggleMed(this)">
+                <div class="med-condition cond-gastric"><i data-lucide="shield-plus"></i>Gastric Protection</div>
+                <div class="med-card-name" onclick="toggleMed(this)">Pantoprazole 40 mg</div>
+                <div class="med-salt"><i data-lucide="flask-conical"></i>Active Ingredient: Pantoprazole Sodium</div>
+                <div class="med-card-dose" onclick="toggleMed(this)">40 mg · Oral</div>
+                <div class="med-card-tags" onclick="toggleMed(this)">
+                  <span class="med-tag tag-morning">Morning</span>
+                  <span class="med-tag tag-days">30 days</span>
+                </div>
+                <div class="med-card-instr" onclick="toggleMed(this)">30 min before breakfast.</div>
+              </div>
+              <button class="med-card-edit" onclick="openEdit(5)" title="Edit"><i data-lucide="pencil"></i></button>
+            </div>
+          </div>
+        </div>
+        <button class="p-cta" onclick="nextScreen()">
+          <i data-lucide="bell"></i> <span id="cta-reminder-label">Set Reminders for 6 Medicines</span>
+        </button>
+
+        <!-- CONFLICT BACKDROP -->
+        <div class="edit-backdrop" id="conflict-backdrop" onclick="closeConflict()"></div>
+
+        <!-- CONFLICT RESOLUTION SHEET -->
+        <div class="edit-sheet" id="conflict-sheet">
+          <div class="edit-sheet-handle"></div>
+          <div class="edit-sheet-header">
+            <span class="edit-sheet-title" style="color:#C2410C;display:flex;align-items:center;gap:6px"><i data-lucide="alert-triangle" style="width:16px;height:16px"></i> Salt Conflict</span>
+            <button class="edit-sheet-close" onclick="closeConflict()"><i data-lucide="x"></i></button>
+          </div>
+          <div class="conflict-sheet-body">
+            <div class="conflict-salt-match">
+              <i data-lucide="flask-conical"></i>
+              Both contain <strong style="margin:0 3px">Metformin Hydrochloride</strong> — same active ingredient
+            </div>
+            <div class="conflict-compare">
+              <div class="conflict-card existing">
+                <span class="conflict-card-badge">In Your Vault</span>
+                <div class="conflict-card-brand">Glycomet 850</div>
+                <div class="conflict-card-salt">Active Ingredient: Metformin HCl</div>
+                <div class="conflict-card-detail">850 mg · OD (Morning) · 90 days</div>
+                <div class="conflict-card-detail">For: Type 2 Diabetes</div>
+                <div class="conflict-card-doctor"><i data-lucide="user-round" style="width:10px;height:10px;display:inline"></i> Dr. Ramesh Kumar<br>General Physician · 14 Apr 2026</div>
+              </div>
+              <div class="conflict-vs">VS</div>
+              <div class="conflict-card incoming">
+                <span class="conflict-card-badge">New Prescription</span>
+                <div class="conflict-card-brand">Metformin 500 mg</div>
+                <div class="conflict-card-salt">Active Ingredient: Metformin HCl</div>
+                <div class="conflict-card-detail">500 mg · BD (Twice daily) · 90 days</div>
+                <div class="conflict-card-detail">For: Type 2 Diabetes</div>
+                <div class="conflict-card-doctor"><i data-lucide="user-round" style="width:10px;height:10px;display:inline"></i> Dr. Ananya Krishnamurthy<br>MD Internal Medicine · 28 May 2026</div>
+              </div>
+            </div>
+            <div class="conflict-actions-label">How would you like to resolve this?</div>
+            <div class="conflict-actions">
+              <button class="conflict-action-btn ca-keep-new" onclick="resolveConflict('keep-new')">
+                <i data-lucide="arrow-up-circle"></i>
+                <span class="action-title">Use New Prescription</span>
+                <span class="action-sub">Switch to Metformin 500mg BD. Deactivate Glycomet 850.</span>
+              </button>
+              <button class="conflict-action-btn ca-keep-old" onclick="resolveConflict('keep-old')">
+                <i data-lucide="shield-check"></i>
+                <span class="action-title">Keep Existing</span>
+                <span class="action-sub">Keep Glycomet 850. Skip this med from new Rx.</span>
+              </button>
+              <button class="conflict-action-btn ca-keep-both" onclick="resolveConflict('keep-both')">
+                <i data-lucide="layers"></i>
+                <span class="action-title">Keep Both — Flag</span>
+                <span class="action-sub">Set both reminders. Mark as "Pending Doctor Review".</span>
+              </button>
+              <button class="conflict-action-btn ca-ask-doc" onclick="resolveConflict('ask-doctor')">
+                <i data-lucide="message-circle"></i>
+                <span class="action-title">Ask My Doctor</span>
+                <span class="action-sub">Hold this med. Send a query to Dr. Ananya Krishnamurthy.</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- EDIT BACKDROP -->
+        <div class="edit-backdrop" id="edit-backdrop" onclick="closeEdit()"></div>
+
+        <!-- EDIT BOTTOM SHEET -->
+        <div class="edit-sheet" id="edit-sheet">
+          <div class="edit-sheet-handle"></div>
+          <div class="edit-sheet-header">
+            <span class="edit-sheet-title">Edit Medication</span>
+            <button class="edit-sheet-close" onclick="closeEdit()"><i data-lucide="x"></i></button>
+          </div>
+          <div class="edit-sheet-body">
+            <div class="edit-field">
+              <label>Treatment / Condition</label>
+              <select id="edit-condition">
+                <option value="Type 2 Diabetes Mellitus">Type 2 Diabetes Mellitus</option>
+                <option value="Essential Hypertension">Essential Hypertension</option>
+                <option value="Peripheral Neuropathy (Diabetic)">Peripheral Neuropathy (Diabetic)</option>
+                <option value="Gastric Protection">Gastric Protection</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+            <div class="edit-field">
+              <label>Medicine Name</label>
+              <input type="text" id="edit-name" placeholder="e.g. Metformin 500 mg"/>
+            </div>
+            <div class="edit-field-row">
+              <div class="edit-field">
+                <label>Dose</label>
+                <input type="text" id="edit-dose" placeholder="e.g. 500 mg"/>
+              </div>
+              <div class="edit-field">
+                <label>Duration</label>
+                <input type="text" id="edit-duration" placeholder="e.g. 90 days"/>
+              </div>
+            </div>
+            <div class="edit-field">
+              <label>Frequency</label>
+              <div class="edit-freq-chips" id="edit-freq-chips">
+                <span class="edit-freq-chip" onclick="selectFreq(this,'Morning')">Morning</span>
+                <span class="edit-freq-chip" onclick="selectFreq(this,'Evening')">Evening</span>
+                <span class="edit-freq-chip" onclick="selectFreq(this,'Night')">Night</span>
+                <span class="edit-freq-chip" onclick="selectFreq(this,'Twice Daily')">Twice Daily</span>
+              </div>
+            </div>
+            <div class="edit-field">
+              <label>Route</label>
+              <select id="edit-route">
+                <option value="Oral">Oral</option>
+                <option value="Topical">Topical</option>
+                <option value="Injection">Injection</option>
+                <option value="Inhaler">Inhaler</option>
+              </select>
+            </div>
+            <div class="edit-field">
+              <label>Special Instructions</label>
+              <textarea id="edit-instr" placeholder="e.g. With meals. Do not crush."></textarea>
+            </div>
+          </div>
+          <div class="edit-sheet-footer">
+            <button class="edit-save-btn" onclick="saveEdit()">
+              <i data-lucide="check"></i> Save Changes
+            </button>
+            <button class="edit-cancel-btn" onclick="closeEdit()">Cancel</button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ── SCREEN 4: SET TIMES ── -->
+      <div class="phone-screen s4" id="screen-3">
+        <div class="p-topbar dark">
+          <div class="p-back dark-btn" onclick="prevScreen()" title="Back"><i data-lucide="arrow-left"></i></div>
+          <span class="p-topbar-title white" id="s4-topbar-title">Set Reminder Times</span>
+        </div>
+        <div class="s4-body" style="overflow-y:auto;max-height:640px;padding-bottom:4px;">
+          <div id="reminders-content"><!-- built dynamically by buildRemindersScreen() --></div>
+
+          <div class="start-date-card" onclick="openDatePicker()" style="cursor:pointer;">
+            <div class="start-date-icon"><i data-lucide="calendar-check"></i></div>
+            <div>
+              <div class="start-date-label">Start Date</div>
+              <div class="start-date-val" id="s4-start-date-val">Today, 28 May 2026</div>
+            </div>
+            <span class="start-date-edit">Change</span>
+          </div>
+
+          <div class="notif-row">
+            <div class="notif-icon"><i data-lucide="bell-ring"></i></div>
+            <div class="notif-text">
+              <div class="notif-label">Push Notifications</div>
+              <div class="notif-sub" id="notif-sub-text">Reminder 15 min before dose</div>
+            </div>
+            <div class="toggle-switch" id="notif-toggle" onclick="toggleNotif()"></div>
+          </div>
+        </div>
+        <button class="p-cta" id="s4-confirm-btn" style="margin:12px 20px 20px;" onclick="nextScreen()">
+          <i data-lucide="check-circle"></i> <span id="s4-confirm-label">Confirm Reminders</span>
+        </button>
+
+        <!-- TIME PICKER backdrop + sheet -->
+        <div class="edit-backdrop" id="tp-backdrop" onclick="closeTimePicker()"></div>
+        <div class="edit-sheet" id="tp-sheet">
+          <div class="edit-sheet-handle"></div>
+          <div class="edit-sheet-header">
+            <span class="edit-sheet-title" id="tp-sheet-title">Edit Time</span>
+            <button class="edit-sheet-close" onclick="closeTimePicker()"><i data-lucide="x"></i></button>
+          </div>
+          <div class="tp-sheet-body">
+            <div class="tp-slot-label" id="tp-slot-label">Morning slot</div>
+            <div class="tp-time-row">
+              <div class="tp-spinner">
+                <button class="tp-spinner-btn" onclick="tpAdjust('hour',1)">▲</button>
+                <div class="tp-spinner-val" id="tp-hour">7</div>
+                <button class="tp-spinner-btn" onclick="tpAdjust('hour',-1)">▼</button>
+              </div>
+              <div class="tp-colon">:</div>
+              <div class="tp-spinner">
+                <button class="tp-spinner-btn" onclick="tpAdjust('min',15)">▲</button>
+                <div class="tp-spinner-val" id="tp-min">00</div>
+                <button class="tp-spinner-btn" onclick="tpAdjust('min',-15)">▼</button>
+              </div>
+              <div class="tp-period">
+                <button class="tp-period-btn active" id="tp-am" onclick="tpSetPeriod('AM')">AM</button>
+                <button class="tp-period-btn" id="tp-pm" onclick="tpSetPeriod('PM')">PM</button>
+              </div>
+            </div>
+            <div class="tp-preview" id="tp-preview">7:00 AM</div>
+            <button class="tp-save" onclick="saveTimePicker()">Set Time</button>
+          </div>
+        </div>
+
+        <!-- DATE PICKER backdrop + sheet -->
+        <div class="edit-backdrop" id="dp-backdrop" onclick="closeDatePicker()"></div>
+        <div class="edit-sheet" id="dp-sheet">
+          <div class="edit-sheet-handle"></div>
+          <div class="edit-sheet-header">
+            <span class="edit-sheet-title">Start Date</span>
+            <button class="edit-sheet-close" onclick="closeDatePicker()"><i data-lucide="x"></i></button>
+          </div>
+          <div class="dp-sheet-body">
+            <div class="dp-input-row">
+              <div class="dp-field">
+                <div class="dp-field-label">Day</div>
+                <div class="dp-spinner-wrap">
+                  <button class="dp-btn" onclick="dpAdjust('day',1)">▲</button>
+                  <div class="dp-val" id="dp-day">28</div>
+                  <button class="dp-btn" onclick="dpAdjust('day',-1)">▼</button>
+                </div>
+              </div>
+              <div class="dp-field">
+                <div class="dp-field-label">Month</div>
+                <div class="dp-spinner-wrap">
+                  <button class="dp-btn" onclick="dpAdjust('month',1)">▲</button>
+                  <div class="dp-val" id="dp-month">May</div>
+                  <button class="dp-btn" onclick="dpAdjust('month',-1)">▼</button>
+                </div>
+              </div>
+              <div class="dp-field">
+                <div class="dp-field-label">Year</div>
+                <div class="dp-spinner-wrap">
+                  <button class="dp-btn" onclick="dpAdjust('year',1)">▲</button>
+                  <div class="dp-val" id="dp-year">2026</div>
+                  <button class="dp-btn" onclick="dpAdjust('year',-1)">▼</button>
+                </div>
+              </div>
+            </div>
+            <div class="dp-preview" id="dp-preview">28 May 2026</div>
+            <button class="dp-save" onclick="saveDatePicker()">Set Start Date</button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ── SCREEN 5: SUCCESS ── -->
+      <div class="phone-screen s5" id="screen-4">
+        <div class="p-topbar" style="padding-top:52px;padding-bottom:12px;justify-content:flex-end;">
+          <button onclick="restartFlow()" style="color:var(--p300);font-size:13px;font-weight:700;background:rgba(255,255,255,0.1);border:none;border-radius:10px;padding:6px 14px;cursor:pointer;margin-left:auto;">Done</button>
+        </div>
+        <div class="s5-body">
+          <div class="success-icon-wrap"><i data-lucide="check"></i></div>
+          <div class="success-title">Reminders Set!</div>
+          <div class="success-sub" id="s5-sub">Reminders added successfully.</div>
+
+          <div class="next-reminder" id="s5-next-reminder">
+            <div class="next-reminder-icon"><i data-lucide="bell-ring"></i></div>
+            <div>
+              <div class="next-reminder-label">Next Reminder</div>
+              <div class="next-reminder-val" id="s5-next-val">—</div>
+            </div>
+          </div>
+
+          <div class="reminder-summary">
+            <div class="reminder-summary-header">
+              <i data-lucide="clock"></i> <span id="s5-schedule-label">Daily Schedule</span>
+            </div>
+            <div id="s5-slots"><!-- built dynamically --></div>
+          </div>
+
+          <div class="s5-ctas">
+            <button class="p-cta" onclick="goTo(0)" style="margin:0;">
+              <i data-lucide="layout-dashboard"></i> View Schedule
+            </button>
+            <button class="p-cta-secondary" onclick="goTo(0)" style="margin:0;">
+              <i data-lucide="plus"></i> Add Another Prescription
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════════════════════════════════════════════════════════
+           MANUAL ENTRY OVERLAY  (slides up over any screen)
+      ══════════════════════════════════════════════════════════ -->
+      <div class="manual-overlay" id="manual-overlay">
+
+        <!-- top bar -->
+        <div class="mo-topbar">
+          <div class="mo-back" onclick="closeManualEntry()" id="mo-back-btn">
+            <i data-lucide="arrow-left"></i>
+          </div>
+          <span class="mo-title" id="mo-title">Prescription Info</span>
+          <span class="mo-step-pill" id="mo-step-pill">Step 1 of 3</span>
+        </div>
+        <div class="mo-progress"><div class="mo-progress-fill" id="mo-progress-fill" style="width:33%"></div></div>
+
+        <!-- ── STEP 1: Prescription Info ── -->
+        <div class="mo-body" id="mo-step-1">
+          <div class="mo-section">Doctor & Prescription</div>
+
+          <div class="mo-field">
+            <div class="mo-label">Doctor Name *</div>
+            <input class="mo-input" id="mo-doc-name" placeholder="e.g. Dr. Ananya Krishnamurthy" />
+          </div>
+          <div class="mo-field">
+            <div class="mo-label">Hospital / Clinic</div>
+            <input class="mo-input" id="mo-hospital" placeholder="e.g. Apollo Spectra, Bengaluru" />
+          </div>
+          <div class="mo-field">
+            <div class="mo-label">Prescription Date *</div>
+            <input class="mo-input" id="mo-date" type="date" />
+          </div>
+          <div class="mo-field">
+            <div class="mo-label">Prescription ID (if available)</div>
+            <input class="mo-input" id="mo-rx-id" placeholder="e.g. RX-2026-00847" />
+          </div>
+
+          <div class="mo-divider"></div>
+          <div class="mo-section">Patient</div>
+          <div class="mo-field">
+            <div class="mo-label">Patient Name *</div>
+            <input class="mo-input" id="mo-patient" placeholder="e.g. Ravi Subramaniam" value="Ravi Subramaniam" />
+          </div>
+          <div class="mo-field">
+            <div class="mo-label">Diagnosis / Reason for Visit</div>
+            <input class="mo-input" id="mo-diagnosis" placeholder="e.g. Type 2 Diabetes, Hypertension" />
+          </div>
+        </div>
+
+        <!-- ── STEP 2: Add Medicines ── -->
+        <div class="mo-body" id="mo-step-2" style="display:none;">
+          <div class="mo-section">Medicines Added</div>
+          <div id="mo-med-list">
+            <!-- dynamic medicine cards injected here -->
+            <div id="mo-empty-state" style="text-align:center;padding:20px 0;color:var(--n400);font-size:13px;">
+              <div style="font-size:32px;margin-bottom:8px;">💊</div>
+              No medicines added yet.<br>Use the form below to add.
+            </div>
+          </div>
+
+          <div class="mo-add-form" id="mo-add-form">
+            <div class="mo-add-form-title"><i data-lucide="plus"></i> Add a Medicine</div>
+
+            <div class="mo-field">
+              <div class="mo-label">Medicine Name *</div>
+              <input class="mo-input" id="mo-med-name" placeholder="e.g. Metformin 500 mg" />
+            </div>
+            <div class="mo-field">
+              <div class="mo-label">Dose *</div>
+              <input class="mo-input" id="mo-med-dose" placeholder="e.g. 500 mg" />
+            </div>
+            <div class="mo-field">
+              <div class="mo-label">Frequency *</div>
+              <div class="mo-chips" id="mo-freq-chips">
+                <span class="mo-chip" onclick="moSelectChip('freq',this,'Morning')">Morning</span>
+                <span class="mo-chip" onclick="moSelectChip('freq',this,'Evening')">Evening</span>
+                <span class="mo-chip" onclick="moSelectChip('freq',this,'Night')">Night</span>
+                <span class="mo-chip" onclick="moSelectChip('freq',this,'Twice Daily')">Twice Daily</span>
+                <span class="mo-chip" onclick="moSelectChip('freq',this,'Three Times')">3× Daily</span>
+              </div>
+            </div>
+            <div class="mo-field">
+              <div class="mo-label">Duration</div>
+              <div class="mo-chips" id="mo-dur-chips">
+                <span class="mo-chip" onclick="moSelectChip('dur',this,'10 days')">10 days</span>
+                <span class="mo-chip" onclick="moSelectChip('dur',this,'30 days')">30 days</span>
+                <span class="mo-chip" onclick="moSelectChip('dur',this,'60 days')">60 days</span>
+                <span class="mo-chip" onclick="moSelectChip('dur',this,'90 days')">90 days</span>
+                <span class="mo-chip" onclick="moSelectChip('dur',this,'Ongoing')">Ongoing</span>
+              </div>
+            </div>
+            <div class="mo-field">
+              <div class="mo-label">Treatment / Condition</div>
+              <select class="mo-input" id="mo-med-cond">
+                <option value="">Select condition…</option>
+                <option value="Type 2 Diabetes Mellitus">Type 2 Diabetes Mellitus</option>
+                <option value="Essential Hypertension">Essential Hypertension</option>
+                <option value="Peripheral Neuropathy (Diabetic)">Peripheral Neuropathy (Diabetic)</option>
+                <option value="Gastric Protection">Gastric Protection</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+            <div class="mo-field">
+              <div class="mo-label">Special Instructions</div>
+              <input class="mo-input" id="mo-med-instr" placeholder="e.g. With meals, Before breakfast…" />
+            </div>
+            <button class="mo-cta" onclick="moAddMedicine()" style="margin-top:4px;">
+              <i data-lucide="plus"></i> Add Medicine
+            </button>
+          </div>
+        </div>
+
+        <!-- ── STEP 3: Review Summary ── -->
+        <div class="mo-body" id="mo-step-3" style="display:none;">
+          <div class="mo-section">Prescription Summary</div>
+          <div id="mo-summary-content" style="background:white;border:1px solid var(--n100);border-radius:14px;padding:14px;margin-bottom:14px;"></div>
+
+          <div class="mo-section">Medicines to Add</div>
+          <div id="mo-summary-meds"></div>
+
+          <div style="background:#F0FDF4;border:1px solid #BBF7D0;border-radius:12px;padding:11px 13px;display:flex;gap:8px;align-items:flex-start;margin-top:8px;">
+            <i data-lucide="info" style="width:14px;height:14px;color:#16A34A;flex-shrink:0;margin-top:1px;"></i>
+            <span style="font-size:11px;color:#15803D;font-weight:600;">All medicines will be checked for ingredient conflicts with your existing vault before adding reminders.</span>
+          </div>
+        </div>
+
+        <!-- sticky footer -->
+        <div class="mo-footer">
+          <button class="mo-cta" id="mo-cta-btn" onclick="moNext()">
+            <i data-lucide="arrow-right"></i> <span id="mo-cta-label">Next: Add Medicines</span>
+          </button>
+        </div>
+
+      </div><!-- /manual-overlay -->
+
+    </div><!-- /phone-frame -->
+
+<script>
+
+let current = 0;
+const total = 5;
+
+const screenData = [
+  { badge: 'Screen 1 — Upload', next: 'Scan Prescription' },
+  { badge: 'Screen 2 — Scanning', next: 'Review Medications' },
+  { badge: 'Screen 3 — Review', next: 'Set Reminders' },
+  { badge: 'Screen 4 — Set Times', next: 'Confirm Reminders' },
+  { badge: 'Screen 5 — Done', next: null },
+];
+
+function goTo(n) {
+  // hide current screen & info
+  document.getElementById('screen-' + current).classList.remove('active');
+  document.getElementById('info-' + current).style.display = 'none';
+  // update stepper
+  const prevEl = document.getElementById('step-' + current);
+  prevEl.classList.remove('active');
+  if (n > current) prevEl.classList.add('done');
+  else prevEl.classList.remove('done');
+  if (current < total - 1) {
+    const conn = document.getElementById('conn-' + current);
+    if (conn) conn.classList.toggle('done', n > current);
+  }
+
+  current = n;
+
+  // show new screen & info
+  document.getElementById('screen-' + current).classList.add('active');
+  document.getElementById('info-' + current).style.display = 'block';
+  // update stepper
+  const curEl = document.getElementById('step-' + current);
+  curEl.classList.remove('done');
+  curEl.classList.add('active');
+
+  // update buttons
+  document.getElementById('btn-prev').disabled = current === 0;
+  const nextBtn = document.getElementById('btn-next');
+  if (current === total - 1) {
+    nextBtn.innerHTML = '<i data-lucide="rotate-ccw"></i> Start Over';
+    nextBtn.onclick = () => restartFlow();
+  } else {
+    nextBtn.innerHTML = 'Next <i data-lucide="arrow-right"></i>';
+    nextBtn.onclick = nextScreen;
+  }
+  lucide.createIcons();
+
+  // scroll phone to top
+  const screen = document.getElementById('screen-' + current);
+  const body = screen.querySelector('.s1-body, .s2-body, .s3-body, .s4-body, .s5-body');
+  if (body) body.scrollTop = 0;
+
+  // kick off scan animation when entering screen 1
+  if (current === 1) {
+    // Reset the CTA button to dimmed state for a fresh scan
+    const btn   = document.getElementById('scan-continue-btn');
+    const label = document.getElementById('scan-continue-label');
+    if (btn)   { btn.style.opacity = '0.45'; btn.style.pointerEvents = 'none'; btn.style.animation = ''; }
+    if (label) label.textContent = 'Analysing…';
+    runScanAnimation();
+  }
+
+  // Reset all med cards to selected when entering Review screen
+  if (current === 2) {
+    document.querySelectorAll('#screen-2 .med-card').forEach(function(card) {
+      card.classList.add('selected');
+    });
+    updateMedCounts();
+    lucide.createIcons();
+  }
+
+  // Build reminders screen from selected cards
+  if (current === 3) {
+    buildRemindersScreen();
+  }
+
+  // Build confirmed screen
+  if (current === 4) {
+    buildConfirmedScreen();
+  }
+}
+
+// ── REMINDERS SCREEN (built from selected med cards) ─────────────────────────
+
+const slotConfig = [
+  { key:'early-morning', label:'Early Morning', time:'6:30 AM', icon:'sunrise', css:'ts-morning', dot:'#34D399', freqs:['Early Morning'] },
+  { key:'morning',       label:'Morning',       time:'7:00 AM', icon:'sun',     css:'ts-morning', dot:'#34D399', freqs:['Morning','Twice Daily','Three Times'] },
+  { key:'afternoon',     label:'Afternoon',     time:'1:00 PM', icon:'sun',     css:'ts-morning', dot:'#FBBF24', freqs:['Three Times'] },
+  { key:'evening',       label:'Evening',       time:'6:00 PM', icon:'sunset',  css:'ts-evening', dot:'#60A5FA', freqs:['Evening','Twice Daily','Three Times'] },
+  { key:'night',         label:'Night',         time:'9:00 PM', icon:'moon',    css:'ts-night',   dot:'#A78BFA', freqs:['Night'] },
+];
+
+function buildRemindersScreen() {
+  // Collect selected med data by reading checked cards
+  const cards = Array.from(document.querySelectorAll('#screen-2 .med-card'));
+  const selected = [];
+  cards.forEach(function(card, i) {
+    if (!card.classList.contains('selected')) return;
+    const m = medsData[i];
+    if (m) selected.push(m);
+  });
+
+  // Group into slots
+  const slots = {};
+  slotConfig.forEach(function(s) { slots[s.key] = []; });
+
+  selected.forEach(function(m) {
+    slotConfig.forEach(function(s) {
+      if (s.freqs.indexOf(m.freq) !== -1) {
+        slots[s.key].push(m);
+      }
+    });
+  });
+
+  // Count total reminders (one per slot entry)
+  let totalReminders = 0;
+  slotConfig.forEach(function(s) { totalReminders += slots[s.key].length; });
+
+  // Update topbar + CTA
+  const title = document.getElementById('s4-topbar-title');
+  if (title) title.textContent = selected.length + ' Medicine' + (selected.length !== 1 ? 's' : '') + ' · ' + totalReminders + ' Reminders';
+
+  const label = document.getElementById('s4-confirm-label');
+  if (label) label.textContent = 'Confirm ' + totalReminders + ' Reminder' + (totalReminders !== 1 ? 's' : '');
+
+  // Build HTML
+  const container = document.getElementById('reminders-content');
+  if (!container) return;
+  container.innerHTML = '';
+
+  slotConfig.forEach(function(s) {
+    const meds = slots[s.key];
+    if (meds.length === 0) return;
+
+    const section = document.createElement('div');
+    section.className = 'time-section ' + s.css;
+    section.innerHTML =
+      '<div class="time-section-header">' +
+        '<div class="time-section-icon"><i data-lucide="' + s.icon + '"></i></div>' +
+        '<div class="time-section-label">' +
+          '<div class="time-section-name">' + s.label + '</div>' +
+          '<div class="time-section-meds">' + meds.length + ' medication' + (meds.length !== 1 ? 's' : '') + '</div>' +
+        '</div>' +
+        '<div class="time-picker-display" id="time-badge-' + s.key + '" onclick="openTimePicker(\'' + s.key + '\',\'' + s.label + '\')">' + s.time + '</div>' +
+      '</div>' +
+      '<div class="time-meds-list">' +
+        meds.map(function(m) {
+          return '<div class="time-med-row">' +
+              '<div class="time-med-dot" style="background:' + s.dot + '"></div>' +
+              '<span class="time-med-name">' + m.name + '</span>' +
+              '<span class="time-med-dose">' + m.dose + '</span>' +
+            '</div>' +
+            (m.instr ? '<div class="time-med-row"><div style="width:6px"></div><span class="time-med-instr">' + m.instr + '</span></div>' : '');
+        }).join('') +
+      '</div>';
+    container.appendChild(section);
+  });
+
+  lucide.createIcons();
+}
+
+// ── TIME PICKER ──────────────────────────────────────────────────────────────
+
+var tpSlotKey = null;
+var tpHour = 7, tpMin = 0, tpPeriod = 'AM';
+
+function openTimePicker(slotKey, slotLabel) {
+  tpSlotKey = slotKey;
+  // Parse current time from badge
+  var badge = document.getElementById('time-badge-' + slotKey);
+  if (badge) {
+    var t = badge.textContent.trim(); // e.g. "7:00 AM"
+    var parts = t.split(' ');
+    var timeParts = parts[0].split(':');
+    tpHour   = parseInt(timeParts[0]);
+    tpMin    = parseInt(timeParts[1]);
+    tpPeriod = parts[1] || 'AM';
+  }
+  tpUpdateUI();
+  document.getElementById('tp-slot-label').textContent = slotLabel + ' slot';
+  document.getElementById('tp-sheet-title').textContent = 'Edit ' + slotLabel + ' Time';
+  document.getElementById('tp-backdrop').style.display = 'block';
+  document.getElementById('tp-sheet').style.transform  = 'translateY(0)';
+  lucide.createIcons();
+}
+
+function closeTimePicker() {
+  document.getElementById('tp-backdrop').style.display = 'none';
+  document.getElementById('tp-sheet').style.transform  = 'translateY(100%)';
+}
+
+function tpAdjust(unit, delta) {
+  if (unit === 'hour') {
+    tpHour = ((tpHour - 1 + delta + 12) % 12) + 1;
+  } else {
+    tpMin = (tpMin + delta + 60) % 60;
+  }
+  tpUpdateUI();
+}
+
+function tpSetPeriod(p) {
+  tpPeriod = p;
+  tpUpdateUI();
+}
+
+function tpUpdateUI() {
+  document.getElementById('tp-hour').textContent   = tpHour;
+  document.getElementById('tp-min').textContent    = String(tpMin).padStart(2,'0');
+  document.getElementById('tp-am').className       = 'tp-period-btn' + (tpPeriod==='AM'?' active':'');
+  document.getElementById('tp-pm').className       = 'tp-period-btn' + (tpPeriod==='PM'?' active':'');
+  var preview = tpHour + ':' + String(tpMin).padStart(2,'0') + ' ' + tpPeriod;
+  document.getElementById('tp-preview').textContent = preview;
+}
+
+function saveTimePicker() {
+  var newTime = tpHour + ':' + String(tpMin).padStart(2,'0') + ' ' + tpPeriod;
+  // Update badge in reminders screen
+  var badge = document.getElementById('time-badge-' + tpSlotKey);
+  if (badge) badge.textContent = newTime;
+  // Update slotConfig so confirmed screen also reflects the change
+  slotConfig.forEach(function(s) { if (s.key === tpSlotKey) s.time = newTime; });
+  closeTimePicker();
+}
+
+// ── DATE PICKER ───────────────────────────────────────────────────────────────
+
+var MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+var dpDay = 28, dpMonthIdx = 4, dpYear = 2026;
+
+function openDatePicker() {
+  dpUpdateUI();
+  document.getElementById('dp-backdrop').style.display = 'block';
+  document.getElementById('dp-sheet').style.transform  = 'translateY(0)';
+  lucide.createIcons();
+}
+
+function closeDatePicker() {
+  document.getElementById('dp-backdrop').style.display = 'none';
+  document.getElementById('dp-sheet').style.transform  = 'translateY(100%)';
+}
+
+function dpAdjust(unit, delta) {
+  if (unit === 'day')   { dpDay = Math.max(1, Math.min(31, dpDay + delta)); }
+  if (unit === 'month') { dpMonthIdx = (dpMonthIdx + delta + 12) % 12; }
+  if (unit === 'year')  { dpYear = Math.max(2024, Math.min(2030, dpYear + delta)); }
+  dpUpdateUI();
+}
+
+function dpUpdateUI() {
+  document.getElementById('dp-day').textContent   = dpDay;
+  document.getElementById('dp-month').textContent = MONTHS[dpMonthIdx];
+  document.getElementById('dp-year').textContent  = dpYear;
+  var preview = dpDay + ' ' + MONTHS[dpMonthIdx] + ' ' + dpYear;
+  document.getElementById('dp-preview').textContent = preview;
+}
+
+function saveDatePicker() {
+  var label = dpDay + ' ' + MONTHS[dpMonthIdx] + ' ' + dpYear;
+  var el = document.getElementById('s4-start-date-val');
+  if (el) el.textContent = label;
+  closeDatePicker();
+}
+
+// ── NOTIFICATION TOGGLE ───────────────────────────────────────────────────────
+
+var notifOn = true;
+
+function toggleNotif() {
+  notifOn = !notifOn;
+  var tog = document.getElementById('notif-toggle');
+  var sub = document.getElementById('notif-sub-text');
+  if (tog) tog.className = 'toggle-switch' + (notifOn ? '' : ' off');
+  if (sub) sub.textContent = notifOn ? 'Reminder 15 min before dose' : 'Notifications are off';
+}
+
+// ── CONFIRMED SCREEN ─────────────────────────────────────────────────────────
+
+function buildConfirmedScreen() {
+  // Read selected meds
+  const cards   = Array.from(document.querySelectorAll('#screen-2 .med-card'));
+  const selected = [];
+  cards.forEach(function(card, i) {
+    if (card.classList.contains('selected') && medsData[i]) selected.push(medsData[i]);
+  });
+
+  // Group by slot (same logic as reminders screen)
+  const slots = {};
+  slotConfig.forEach(function(s) { slots[s.key] = []; });
+  selected.forEach(function(m) {
+    slotConfig.forEach(function(s) {
+      if (s.freqs.indexOf(m.freq) !== -1) slots[s.key].push(m);
+    });
+  });
+
+  // Count total reminders
+  let totalReminders = 0;
+  slotConfig.forEach(function(s) { totalReminders += slots[s.key].length; });
+
+  // Sub-title
+  const sub = document.getElementById('s5-sub');
+  if (sub) sub.textContent = totalReminders + ' daily reminder' + (totalReminders !== 1 ? 's' : '') +
+    ' added for ' + selected.length + ' medicine' + (selected.length !== 1 ? 's' : '') +
+    '. You\'ll be notified before each dose.';
+
+  // Schedule label
+  const schedLabel = document.getElementById('s5-schedule-label');
+  if (schedLabel) schedLabel.textContent = 'Daily Schedule · ' + totalReminders + ' reminder' + (totalReminders !== 1 ? 's' : '');
+
+  // Next reminder — first non-empty slot
+  const nextVal = document.getElementById('s5-next-val');
+  if (nextVal) {
+    var found = false;
+    slotConfig.forEach(function(s) {
+      if (found || slots[s.key].length === 0) return;
+      var parts = s.time.split(':');
+      var hr = parseInt(parts[0]);
+      var suffix = s.time.indexOf('PM') !== -1 ? 'PM' : 'AM';
+      var label = hr < 12 ? 'Today · ' : (suffix === 'PM' ? 'Tonight · ' : 'Today · ');
+      nextVal.textContent = label + s.time + ' — ' + slots[s.key][0].name;
+      found = true;
+    });
+    if (!found) nextVal.textContent = 'No reminders set';
+  }
+
+  // Build slots
+  const slotsEl = document.getElementById('s5-slots');
+  if (!slotsEl) return;
+  slotsEl.innerHTML = '';
+
+  slotConfig.forEach(function(s) {
+    const meds = slots[s.key];
+    if (meds.length === 0) return;
+
+    // Parse time for badge
+    var timeParts = s.time.replace(' AM','').replace(' PM','').split(':');
+    var timeMain = timeParts[0] + ':' + timeParts[1];
+    var period   = s.time.indexOf('AM') !== -1 ? 'AM' : 'PM';
+
+    const slot = document.createElement('div');
+    slot.className = 'reminder-slot';
+    slot.innerHTML =
+      '<div class="slot-time-badge">' +
+        '<div class="time">' + timeMain + '</div>' +
+        '<div class="period">' + period + '</div>' +
+      '</div>' +
+      '<div class="slot-meds">' +
+        meds.map(function(m) {
+          return '<div class="slot-med-name">' + m.name + '</div>';
+        }).join('') +
+      '</div>';
+    slotsEl.appendChild(slot);
+  });
+
+  lucide.createIcons();
+}
+
+// ── MED CARD TOGGLE ──────────────────────────────────────────────────────────
+
+function toggleMed(card) {
+  if (window._toggleBlocked) return;
+  card.classList.toggle('selected');
+  updateMedCounts();
+  lucide.createIcons();
+}
+
+function updateMedCounts() {
+  const all      = document.querySelectorAll('#screen-2 .med-card');
+  const selected = document.querySelectorAll('#screen-2 .med-card.selected');
+  const total    = all.length;
+  const count    = selected.length;
+
+  const countEl = document.getElementById('med-selected-count');
+  if (countEl) {
+    if (count === total)  countEl.textContent = 'All selected';
+    else if (count === 0) countEl.textContent = 'None selected';
+    else                  countEl.textContent = count + ' of ' + total + ' selected';
+  }
+
+  const ctaLabel = document.getElementById('cta-reminder-label');
+  if (ctaLabel) {
+    if (count === 0)          ctaLabel.textContent = 'Select at least 1 medicine';
+    else if (count === total) ctaLabel.textContent = 'Set Reminders for ' + total + ' Medicines';
+    else                      ctaLabel.textContent = 'Set Reminders for ' + count + ' Medicine' + (count > 1 ? 's' : '');
+  }
+
+  const cta = document.querySelector('#screen-2 .p-cta');
+  if (cta) cta.style.opacity = count === 0 ? '0.45' : '1';
+}
+
+// Prevent card toggle when tapping nested action elements
+document.addEventListener('click', function(e) {
+  if (e.target.closest('.med-card-edit') ||
+      e.target.closest('.conflict-badge') ||
+      e.target.closest('.conflict-banner')) {
+    window._toggleBlocked = true;
+    setTimeout(function() { window._toggleBlocked = false; }, 50);
+  }
+}, true);
+
+// ── MANUAL ENTRY ─────────────────────────────────────────────────────────────
+
+let moStep = 1;
+let moMeds = [];
+let moFreqSel = '';
+let moDurSel  = '';
+
+const condChipMeta = {
+  'Type 2 Diabetes Mellitus':        { cls:'cond-diabetes', icon:'activity' },
+  'Essential Hypertension':          { cls:'cond-hyper',    icon:'heart-pulse' },
+  'Peripheral Neuropathy (Diabetic)':{ cls:'cond-neuro',    icon:'brain' },
+  'Gastric Protection':              { cls:'cond-gastric',  icon:'shield-plus' },
+  'Other':                           { cls:'cond-gastric',  icon:'info' },
+};
+
+function openManualEntry() {
+  moStep = 1; moMeds = []; moFreqSel = ''; moDurSel = '';
+  moRenderStep();
+  document.getElementById('manual-overlay').classList.add('open');
+  lucide.createIcons();
+}
+
+function closeManualEntry() {
+  if (moStep > 1) {
+    moStep--;
+    moRenderStep();
+  } else {
+    document.getElementById('manual-overlay').classList.remove('open');
+  }
+}
+
+function moRenderStep() {
+  // hide all step bodies
+  [1,2,3].forEach(i => {
+    document.getElementById('mo-step-' + i).style.display = i === moStep ? 'block' : 'none';
+  });
+  // progress bar & labels
+  const pct   = ['33%','66%','100%'][moStep - 1];
+  const titles = ['Prescription Info', 'Add Medicines', 'Review & Confirm'];
+  const pills  = ['Step 1 of 3', 'Step 2 of 3', 'Step 3 of 3'];
+  const ctas   = ['Next: Add Medicines', moMeds.length > 0 ? `Review ${moMeds.length} Medicine${moMeds.length>1?'s':''}` : 'Add at least 1 medicine', 'Set Reminders'];
+
+  document.getElementById('mo-progress-fill').style.width = pct;
+  document.getElementById('mo-title').textContent        = titles[moStep - 1];
+  document.getElementById('mo-step-pill').textContent    = pills[moStep - 1];
+  document.getElementById('mo-cta-label').textContent    = ctas[moStep - 1];
+  document.getElementById('mo-cta-btn').disabled         = moStep === 2 && moMeds.length === 0;
+
+  if (moStep === 3) moRenderSummary();
+  lucide.createIcons();
+}
+
+function moNext() {
+  if (moStep === 1) {
+    const docName = document.getElementById('mo-doc-name').value.trim();
+    if (!docName) { document.getElementById('mo-doc-name').focus(); return; }
+    moStep = 2;
+    moRenderStep();
+    moRenderMedList();
+  } else if (moStep === 2) {
+    if (moMeds.length === 0) return;
+    moStep = 3;
+    moRenderStep();
+  } else if (moStep === 3) {
+    // close overlay and jump to review screen
+    document.getElementById('manual-overlay').classList.remove('open');
+    goTo(2); // Screen 3 — Review Medications
+  }
+}
+
+function moSelectChip(type, el, val) {
+  const groupId = type === 'freq' ? 'mo-freq-chips' : 'mo-dur-chips';
+  document.querySelectorAll('#' + groupId + ' .mo-chip').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  if (type === 'freq') moFreqSel = val;
+  else moDurSel = val;
+}
+
+function moAddMedicine() {
+  const name  = document.getElementById('mo-med-name').value.trim();
+  const dose  = document.getElementById('mo-med-dose').value.trim();
+  const cond  = document.getElementById('mo-med-cond').value;
+  const instr = document.getElementById('mo-med-instr').value.trim();
+
+  if (!name || !dose || !moFreqSel) {
+    if (!name) document.getElementById('mo-med-name').focus();
+    else if (!dose) document.getElementById('mo-med-dose').focus();
+    return;
+  }
+
+  moMeds.push({ name, dose, freq: moFreqSel, duration: moDurSel || '30 days', condition: cond || 'Other', instr });
+
+  // clear form
+  ['mo-med-name','mo-med-dose','mo-med-instr'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('mo-med-cond').value = '';
+  document.querySelectorAll('#mo-freq-chips .mo-chip, #mo-dur-chips .mo-chip').forEach(c => c.classList.remove('selected'));
+  moFreqSel = ''; moDurSel = '';
+
+  moRenderMedList();
+  moRenderStep(); // refresh CTA label
+}
+
+function moRemoveMed(idx) {
+  moMeds.splice(idx, 1);
+  moRenderMedList();
+  moRenderStep();
+}
+
+function moRenderMedList() {
+  const list = document.getElementById('mo-med-list');
+  const empty = document.getElementById('mo-empty-state');
+  if (moMeds.length === 0) {
+    empty.style.display = 'block';
+    // remove all cards except empty state
+    list.querySelectorAll('.mo-med-card').forEach(c => c.remove());
+    return;
+  }
+  empty.style.display = 'none';
+  list.querySelectorAll('.mo-med-card').forEach(c => c.remove());
+
+  moMeds.forEach((m, i) => {
+    const meta = condChipMeta[m.condition] || condChipMeta['Other'];
+    const card = document.createElement('div');
+    card.className = 'mo-med-card';
+    card.innerHTML = `
+      <div class="med-condition ${meta.cls}" style="font-size:10px;font-weight:700;padding:3px 8px 3px 5px;border-radius:99px;display:inline-flex;align-items:center;gap:4px;margin-bottom:5px;">
+        <i data-lucide="${meta.icon}" style="width:10px;height:10px;"></i>${m.condition}
+      </div>
+      <div class="mo-med-card-name">${m.name}</div>
+      <div class="mo-med-card-detail">${m.dose} · ${m.freq} · ${m.duration}${m.instr ? ' · ' + m.instr : ''}</div>
+      <button class="mo-med-delete" onclick="moRemoveMed(${i})"><i data-lucide="x"></i></button>
+    `;
+    list.insertBefore(card, document.getElementById('mo-add-form'));
+    lucide.createIcons();
+  });
+}
+
+function moRenderSummary() {
+  const docName  = document.getElementById('mo-doc-name').value.trim()  || '—';
+  const hospital = document.getElementById('mo-hospital').value.trim()  || '—';
+  const date     = document.getElementById('mo-date').value             || '—';
+  const rxId     = document.getElementById('mo-rx-id').value.trim()     || 'Manual Entry';
+
+  document.getElementById('mo-summary-content').innerHTML = `
+    <div style="font-size:14px;font-weight:800;color:var(--n900);margin-bottom:3px;">${docName}</div>
+    <div style="font-size:11px;color:var(--n400);margin-bottom:10px;">${hospital}</div>
+    <div style="display:flex;flex-wrap:wrap;gap:6px;">
+      <span style="font-size:10px;font-weight:600;background:var(--p100);color:var(--p700);padding:3px 9px;border-radius:99px;"># ${rxId}</span>
+      <span style="font-size:10px;font-weight:600;background:var(--p100);color:var(--p700);padding:3px 9px;border-radius:99px;">📅 ${date}</span>
+      <span style="font-size:10px;font-weight:600;background:var(--p100);color:var(--p700);padding:3px 9px;border-radius:99px;">💊 ${moMeds.length} medicine${moMeds.length>1?'s':''}</span>
+    </div>
+  `;
+
+  const summaryMeds = document.getElementById('mo-summary-meds');
+  summaryMeds.innerHTML = '';
+  moMeds.forEach((m, i) => {
+    const meta = condChipMeta[m.condition] || condChipMeta['Other'];
+    const div = document.createElement('div');
+    div.style.cssText = 'background:white;border:1px solid var(--n100);border-radius:12px;padding:11px 13px;margin-bottom:8px;';
+    div.innerHTML = `
+      <div class="med-condition ${meta.cls}" style="font-size:10px;font-weight:700;padding:3px 8px 3px 5px;border-radius:99px;display:inline-flex;align-items:center;gap:4px;margin-bottom:5px;">
+        <i data-lucide="${meta.icon}" style="width:10px;height:10px;"></i>${m.condition}
+      </div>
+      <div style="font-size:13px;font-weight:700;color:var(--n900);">${m.name}</div>
+      <div style="font-size:11px;color:var(--n400);margin-top:2px;">${m.dose} · ${m.freq} · ${m.duration}</div>
+    `;
+    summaryMeds.appendChild(div);
+  });
+  lucide.createIcons();
+}
+
+// ── SCAN ANIMATION ────────────────────────────────────────────────────────────
+let scanTimer = null;
+
+function runScanAnimation() {
+  // reset all steps to pending
+  clearTimeout(scanTimer);
+  [1,2,3,4].forEach(i => {
+    const icon  = document.getElementById('sicon-' + i);
+    const check = document.getElementById('scheck-' + i);
+    icon.className  = 'scan-step-icon pending';
+    check.style.opacity = '0';
+  });
+  document.getElementById('ssub-1').textContent = 'Waiting…';
+  document.getElementById('ssub-2').textContent = 'Waiting for RxNorm API…';
+  document.getElementById('ssub-3').textContent = 'Checking for duplicate ingredients…';
+  document.getElementById('ssub-4').textContent = 'Building your summary…';
+  document.getElementById('scan-title').textContent = 'Analysing Prescription';
+  document.getElementById('scan-sub').textContent = 'AI is reading your document…';
+  document.getElementById('scan-progress-label').textContent = 'Starting analysis…';
+  const fill = document.getElementById('scan-progress-fill');
+  fill.style.transition = 'none';
+  fill.style.width = '5%';
+  const pill = document.getElementById('conflict-found-pill');
+  pill.style.display = 'none';
+
+  const steps = [
+    // [delay, stepIdx, iconClass, iconName, subText, progressPct, progressLabel, titleText, subTitle, markDone]
+    [600,  1, 'active',  'brain-circuit', 'Reading doctor name, date, Rx number…', '25%', 'Extracting patient & doctor info…', null, null, false],
+    [2000, 1, 'done',    'check',         'Found 6 medications · dosages · frequencies', '40%', 'Medicines extracted successfully', null, null, true],
+    [2400, 2, 'active',  'flask-conical', 'Matching brand names to active ingredients…', '55%', 'Identifying active ingredients for 6 medicines…', 'Checking Active Ingredients', 'Matching brands to active ingredients…', false],
+    [4200, 2, 'done',    'check',         '6 / 6 active ingredients identified', '68%', 'All active ingredients confirmed', null, null, true],
+    [4700, 3, 'active',  'shield-alert',  'Cross-checking against your active meds…', '80%', 'Checking for duplicate active ingredients…', 'Checking Your Vault', 'Looking for duplicate therapies…', false],
+    [6200, 3, 'done',    'check',         '⚠ 1 conflict · Metformin HCl (Glycomet 850)', '88%', 'Conflict detected — needs your review', null, null, true],
+    [6500, 4, 'active',  'bell',          'Grouping by time & condition…', '95%', 'Setting up reminder schedule…', null, null, false],
+    [7800, 4, 'done',    'check',         'Ready · 6 meds · 4 time slots', '100%', 'Analysis complete!', 'Ready to Review', 'Tap Continue to see results', true],
+  ];
+
+  steps.forEach(([delay, idx, cls, icon, sub, pct, progLabel, title, subtitle, markDone]) => {
+    scanTimer = setTimeout(() => {
+      const iconEl  = document.getElementById('sicon-' + idx);
+      const checkEl = document.getElementById('scheck-' + idx);
+      const subEl   = document.getElementById('ssub-'  + idx);
+
+      iconEl.className = 'scan-step-icon ' + cls;
+      iconEl.innerHTML = `<i data-lucide="${icon}"></i>`;
+      subEl.textContent = sub;
+      if (markDone) checkEl.style.opacity = '1';
+
+      fill.style.transition = 'width 0.8s ease';
+      fill.style.width = pct;
+      document.getElementById('scan-progress-label').textContent = progLabel;
+
+      if (title)    document.getElementById('scan-title').textContent = title;
+      if (subtitle) document.getElementById('scan-sub').textContent   = subtitle;
+
+      // show conflict pill after vault check done
+      if (idx === 3 && markDone) {
+        const p = document.getElementById('conflict-found-pill');
+        p.style.display = 'flex';
+      }
+
+      // Enable "Continue to Review" only after ALL steps complete (final step done)
+      if (idx === 4 && markDone) {
+        const btn   = document.getElementById('scan-continue-btn');
+        const label = document.getElementById('scan-continue-label');
+        if (btn) {
+          btn.style.opacity       = '1';
+          btn.style.pointerEvents = 'auto';
+          // Subtle pulse to draw attention
+          btn.style.animation = 'pulse 1.2s ease 2';
+        }
+        if (label) label.textContent = 'Continue to Review — All 6 Checked';
+      }
+
+      lucide.createIcons();
+    }, delay);
+  });
+}
+
+function nextScreen() { if (current < total - 1) goTo(current + 1); }
+function prevScreen() { if (current > 0) goTo(current - 1); }
+function restartFlow() {
+  // reset all steps
+  for (let i = 0; i < total; i++) {
+    const el = document.getElementById('step-' + i);
+    el.classList.remove('active','done');
+    const conn = document.getElementById('conn-' + i);
+    if (conn) conn.classList.remove('done');
+  }
+  // reset file selection on screen 0
+  clearFile();
+  goTo(0);
+}
+
+document.addEventListener('DOMContentLoaded', () => { lucide.createIcons(); });
+
+// ── EDIT BOTTOM SHEET ──
+const conditionMeta = {
+  'Type 2 Diabetes Mellitus':       { cls:'cond-diabetes', icon:'activity' },
+  'Essential Hypertension':         { cls:'cond-hyper',    icon:'heart-pulse' },
+  'Peripheral Neuropathy (Diabetic)':{ cls:'cond-neuro',   icon:'brain' },
+  'Gastric Protection':             { cls:'cond-gastric',  icon:'shield-plus' },
+  'Other':                          { cls:'cond-gastric',  icon:'info' },
+};
+
+const medsData = [
+  { name:'Metformin 500 mg',         dose:'500 mg',   freq:'Twice Daily', duration:'90 days', route:'Oral', instr:'With meals. Do not crush.',         condition:'Type 2 Diabetes Mellitus' },
+  { name:'Glimepiride 2 mg',         dose:'2 mg',     freq:'Morning',     duration:'90 days', route:'Oral', instr:'Before breakfast. Monitor BS.',      condition:'Type 2 Diabetes Mellitus' },
+  { name:'Telmisartan 40 mg',        dose:'40 mg',    freq:'Morning',     duration:'90 days', route:'Oral', instr:'Same time daily. Avoid K+ foods.',   condition:'Essential Hypertension' },
+  { name:'Amlodipine 5 mg',          dose:'5 mg',     freq:'Evening',     duration:'90 days', route:'Oral', instr:'If BP > 140/90. Log readings.',      condition:'Essential Hypertension' },
+  { name:'Methylcobalamin 1500 mcg', dose:'1500 mcg', freq:'Night',       duration:'60 days', route:'Oral', instr:'For neuropathy. With food.',          condition:'Peripheral Neuropathy (Diabetic)' },
+  { name:'Pantoprazole 40 mg',       dose:'40 mg',    freq:'Morning',     duration:'30 days', route:'Oral', instr:'30 min before breakfast.',            condition:'Gastric Protection' },
+];
+
+let editingIdx = null;
+
+function openEdit(idx) {
+  editingIdx = idx;
+  const m = medsData[idx];
+  document.getElementById('edit-condition').value = m.condition;
+  document.getElementById('edit-name').value      = m.name;
+  document.getElementById('edit-dose').value      = m.dose;
+  document.getElementById('edit-duration').value  = m.duration;
+  document.getElementById('edit-route').value     = m.route;
+  document.getElementById('edit-instr').value     = m.instr;
+  document.querySelectorAll('.edit-freq-chip').forEach(chip => {
+    chip.classList.toggle('active', chip.textContent.trim() === m.freq);
+  });
+  document.getElementById('edit-backdrop').classList.add('open');
+  document.getElementById('edit-sheet').classList.add('open');
+  lucide.createIcons();
+}
+
+function closeEdit() {
+  document.getElementById('edit-backdrop').classList.remove('open');
+  document.getElementById('edit-sheet').classList.remove('open');
+  editingIdx = null;
+}
+
+function selectFreq(el, val) {
+  document.querySelectorAll('.edit-freq-chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  if (editingIdx !== null) medsData[editingIdx].freq = val;
+}
+
+function saveEdit() {
+  if (editingIdx === null) return;
+  const m = medsData[editingIdx];
+  m.condition = document.getElementById('edit-condition').value;
+  m.name      = document.getElementById('edit-name').value.trim()     || m.name;
+  m.dose      = document.getElementById('edit-dose').value.trim()     || m.dose;
+  m.duration  = document.getElementById('edit-duration').value.trim() || m.duration;
+  m.route     = document.getElementById('edit-route').value;
+  m.instr     = document.getElementById('edit-instr').value.trim()    || m.instr;
+
+  const cards = document.querySelectorAll('#screen-2 .med-card');
+  const card  = cards[editingIdx];
+
+  // update condition chip
+  const meta = conditionMeta[m.condition] || conditionMeta['Other'];
+  const condEl = card.querySelector('.med-condition');
+  if (condEl) {
+    condEl.className = 'med-condition ' + meta.cls;
+    condEl.innerHTML = `<i data-lucide="${meta.icon}"></i>${m.condition}`;
+  }
+
+  // update name, dose, instructions
+  card.querySelector('.med-card-name').textContent  = m.name;
+  card.querySelector('.med-card-dose').textContent  = m.dose + ' · ' + m.route;
+  card.querySelector('.med-card-instr').textContent = m.instr;
+
+  // update duration tag
+  const dayTag = card.querySelector('.med-tag.tag-days');
+  if (dayTag) dayTag.textContent = m.duration;
+
+  // update frequency tag
+  const freqMap    = { 'Morning':'tag-morning','Evening':'tag-evening','Night':'tag-night','Twice Daily':'tag-twice' };
+  const freqLabels = { 'Morning':'Morning','Evening':'Evening','Night':'Night','Twice Daily':'Twice Daily' };
+  card.querySelectorAll('.med-card-tags .med-tag:not(.tag-days)').forEach(t => {
+    Object.values(freqMap).forEach(cls => t.classList.remove(cls));
+    t.classList.add(freqMap[m.freq] || 'tag-morning');
+    t.textContent = freqLabels[m.freq] || m.freq;
+  });
+
+  lucide.createIcons();
+
+  // green flash confirmation
+  card.style.transition = 'background 0.3s';
+  card.style.background = '#F0FDF4';
+  setTimeout(() => { card.style.background = ''; }, 700);
+
+  closeEdit();
+}
+
+// ── SOURCE PICKER (Camera / Gallery / Files) ─────────────────────────────────
+
+var _activeSourcePicker = null;
+var _gallerySelected = 0; // index of selected thumbnail
+var _fileSelected = 0;    // index of selected file item
+
+var galleryItems = [
+  { bg:'#EDE9FE', color:'#7C3AED', label:'RX · May 2026' },
+  { bg:'#DBEAFE', color:'#2563EB', label:'RX · Apr 2026' },
+  { bg:'#FEF3C7', color:'#D97706', label:'RX · Feb 2026' },
+  { bg:'#FCE7F3', color:'#DB2777', label:'RX · Jan 2026' },
+  { bg:'#D1FAE5', color:'#059669', label:'RX · Dec 2025' },
+  { bg:'#F3F4F6', color:'#6B7280', label:'Scan · Nov 2025' },
+];
+
+var fileItems = [
+  { name:'RX_Apollo_May2026.pdf',     meta:'PDF · 1.2 MB · 28 May 2026' },
+  { name:'prescription_cardio.pdf',   meta:'PDF · 856 KB · 12 Apr 2026' },
+  { name:'scan001_rx.jpg',            meta:'JPG · 2.4 MB · 5 Mar 2026' },
+  { name:'IMG_20260118_rx.heic',      meta:'HEIC · 3.1 MB · 18 Jan 2026' },
+];
+
+function openSourcePicker(type) {
+  // Close any open picker first
+  closeSourcePicker(true);
+  _activeSourcePicker = type;
+
+  // Highlight active source btn
+  ['camera','gallery','files'].forEach(function(t) {
+    var b = document.getElementById('src-btn-' + t);
+    if (b) b.classList.toggle('active', t === type);
+  });
+
+  // Show backdrop
+  var backdrop = document.getElementById('source-picker-backdrop');
+  if (backdrop) { backdrop.style.display = 'block'; }
+
+  // Build gallery grid on first open
+  if (type === 'gallery') {
+    var grid = document.getElementById('gallery-grid');
+    if (grid && !grid.dataset.built) {
+      grid.dataset.built = '1';
+      galleryItems.forEach(function(item, i) {
+        var thumb = document.createElement('div');
+        thumb.className = 'gallery-thumb' + (i === _gallerySelected ? ' selected' : '');
+        thumb.id = 'gthumb-' + i;
+        thumb.onclick = function() { selectGalleryThumb(i); };
+        thumb.innerHTML = '<div class="gallery-thumb-inner" style="background:' + item.bg + ';">'
+          + '<div class="gallery-thumb-rx" style="color:' + item.color + ';">' + item.label + '</div>'
+          + '<div class="gallery-thumb-lines">'
+          + '<div style="background:' + item.color + ';opacity:0.3;"></div>'
+          + '<div style="background:' + item.color + ';opacity:0.2;width:70%;"></div>'
+          + '<div style="background:' + item.color + ';opacity:0.3;"></div>'
+          + '<div style="background:' + item.color + ';opacity:0.2;width:80%;"></div>'
+          + '<div style="background:' + item.color + ';opacity:0.3;width:60%;"></div>'
+          + '</div></div>'
+          + '<div class="selected-ring"><i data-lucide="check"></i></div>';
+        grid.appendChild(thumb);
+      });
+      // Default select first
+      selectGalleryThumb(0);
+    }
+  }
+
+  // Default select first file item
+  if (type === 'files') {
+    selectFileItem(0);
+  }
+
+  var sheet = document.getElementById(type + '-picker-sheet');
+  if (sheet) {
+    sheet.style.transform = 'translateY(0)';
+    setTimeout(function() { lucide.createIcons(); }, 50);
+  }
+}
+
+function closeSourcePicker(silent) {
+  var backdrop = document.getElementById('source-picker-backdrop');
+  if (backdrop) backdrop.style.display = 'none';
+  ['camera','gallery','files'].forEach(function(t) {
+    var sheet = document.getElementById(t + '-picker-sheet');
+    if (sheet) sheet.style.transform = 'translateY(100%)';
+    if (!silent) {
+      var b = document.getElementById('src-btn-' + t);
+      if (b) b.classList.remove('active');
+    }
+  });
+  if (!silent) _activeSourcePicker = null;
+}
+
+function selectGalleryThumb(idx) {
+  document.querySelectorAll('.gallery-thumb').forEach(function(el) { el.classList.remove('selected'); });
+  var thumb = document.getElementById('gthumb-' + idx);
+  if (thumb) thumb.classList.add('selected');
+  _gallerySelected = idx;
+  var btn = document.getElementById('gallery-select-btn');
+  if (btn) btn.classList.add('ready');
+}
+
+function selectFileItem(idx) {
+  document.querySelectorAll('.file-list-item').forEach(function(el) { el.classList.remove('selected'); });
+  var item = document.getElementById('fitem-' + idx);
+  if (item) item.classList.add('selected');
+  _fileSelected = idx;
+  var btn = document.getElementById('file-open-btn');
+  if (btn) btn.classList.add('ready');
+  lucide.createIcons();
+}
+
+function confirmPick(source, filename, sourceMeta) {
+  closeSourcePicker();
+  setFileSelected(filename, sourceMeta, source);
+}
+
+function confirmGalleryPick() {
+  var item = galleryItems[_gallerySelected];
+  var name = item.label.replace(' · ', '_').replace(' ', '') + '.jpg';
+  confirmPick('gallery', name, 'Gallery · ' + item.label.split(' · ')[1]);
+}
+
+function confirmFilePick() {
+  var item = fileItems[_fileSelected];
+  confirmPick('files', item.name, 'Files · ' + item.meta.split(' · ')[2]);
+}
+
+function setFileSelected(filename, sourceMeta, sourceType) {
+  // Update upload zone
+  var zone = document.getElementById('upload-zone');
+  if (zone) zone.classList.add('file-selected');
+
+  // Update icon to check
+  var iconWrap = document.getElementById('upload-icon-wrap');
+  if (iconWrap) {
+    iconWrap.innerHTML = '<i data-lucide="circle-check" style="width:32px;height:32px;color:#16A34A;"></i>';
+    lucide.createIcons();
+  }
+  document.getElementById('upload-zone-title').textContent = 'File Ready to Scan';
+  document.getElementById('upload-zone-sub').textContent = 'Tap Scan Prescription to continue';
+  document.getElementById('upload-formats').style.display = 'none';
+
+  // Show file info card
+  document.getElementById('file-selected-name').textContent = filename;
+  document.getElementById('file-selected-source').textContent = sourceMeta;
+  document.getElementById('file-selected-info').style.display = 'flex';
+  lucide.createIcons();
+
+  // Highlight source btn (keep active ring on chosen source)
+  ['camera','gallery','files'].forEach(function(t) {
+    var b = document.getElementById('src-btn-' + t);
+    if (b) b.classList.toggle('active', t === sourceType);
+  });
+
+  // Enable Scan button
+  var btn = document.getElementById('scan-cta-btn');
+  var lbl = document.getElementById('scan-cta-label');
+  if (btn) { btn.style.opacity = '1'; btn.style.pointerEvents = 'auto'; btn.style.animation = 'pulse 1.2s ease 2'; }
+  if (lbl) lbl.textContent = 'Scan Prescription';
+}
+
+function clearFile(e) {
+  if (e) { e.stopPropagation(); }
+
+  // Reset upload zone
+  var zone = document.getElementById('upload-zone');
+  if (zone) zone.classList.remove('file-selected');
+
+  var iconWrap = document.getElementById('upload-icon-wrap');
+  if (iconWrap) {
+    iconWrap.innerHTML = '<i data-lucide="scan-line" style="width:32px;height:32px;color:var(--p600);"></i>';
+    lucide.createIcons();
+  }
+  document.getElementById('upload-zone-title').textContent = 'Scan or Upload';
+  document.getElementById('upload-zone-sub').textContent = 'Take a photo, upload a file, or import from cloud storage';
+  document.getElementById('upload-formats').style.display = '';
+  document.getElementById('file-selected-info').style.display = 'none';
+
+  // Remove active states from source btns
+  ['camera','gallery','files'].forEach(function(t) {
+    var b = document.getElementById('src-btn-' + t);
+    if (b) b.classList.remove('active');
+  });
+
+  // Disable Scan button
+  var btn = document.getElementById('scan-cta-btn');
+  var lbl = document.getElementById('scan-cta-label');
+  if (btn) { btn.style.opacity = '0.45'; btn.style.pointerEvents = 'none'; btn.style.animation = ''; }
+  if (lbl) lbl.textContent = 'Choose a file to continue';
+}
+
+// ── RX DETAIL SHEET ──────────────────────────────────────────────────────────
+
+function openRxDetail() {
+  document.getElementById('rx-detail-backdrop').style.display = 'block';
+  document.getElementById('rx-detail-sheet').style.transform = 'translateY(0)';
+  lucide.createIcons();
+}
+
+function closeRxDetail() {
+  document.getElementById('rx-detail-backdrop').style.display = 'none';
+  document.getElementById('rx-detail-sheet').style.transform = 'translateY(100%)';
+}
+
+// ── CONFLICT RESOLUTION ────────────────────────────────────────────────────
+
+function openConflict() {
+  const backdrop = document.getElementById('conflict-backdrop');
+  const sheet    = document.getElementById('conflict-sheet');
+  backdrop.style.display = 'block';
+  sheet.style.transform  = 'translateY(0)';
+  lucide.createIcons();
+}
+
+function closeConflict() {
+  document.getElementById('conflict-backdrop').style.display = 'none';
+  document.getElementById('conflict-sheet').style.transform  = 'translateY(100%)';
+}
+
+function resolveConflict(action) {
+  // Find the Metformin card (index 0)
+  const cards = document.querySelectorAll('#screen-2 .med-card');
+  const metCard = cards[0];
+
+  // Remove orange conflict styling
+  metCard.classList.remove('has-conflict');
+  const badge = metCard.querySelector('.conflict-badge');
+  if (badge) badge.remove();
+
+  // Remove the conflict banner
+  const banner = document.querySelector('#screen-2 .conflict-banner');
+  if (banner) banner.remove();
+
+  const outcomes = {
+    'keep-new':    { bg:'#F0FDF4', label:'✓ Using new Rx — Glycomet 850 deactivated',      labelColor:'#065F46' },
+    'keep-old':    { bg:'#EFF6FF', label:'✓ Keeping Glycomet 850 — skipping from new Rx',  labelColor:'#1E40AF' },
+    'keep-both':   { bg:'#FFFBEB', label:'⚑ Both reminders set — Pending Doctor Review',   labelColor:'#92400E' },
+    'ask-doctor':  { bg:'#FAF5FF', label:'✉ Held — query sent to Dr. Ananya Krishnamurthy',labelColor:'#6B21A8' },
+  };
+
+  const o = outcomes[action];
+  if (o) {
+    metCard.style.transition = 'background 0.3s';
+    metCard.style.background = o.bg;
+
+    // Add a small resolution note below instr
+    const instr = metCard.querySelector('.med-card-instr');
+    if (instr && !metCard.querySelector('.resolve-note')) {
+      const note = document.createElement('div');
+      note.className = 'resolve-note';
+      note.style.cssText = `font-size:10px;font-weight:700;margin-top:5px;color:${o.labelColor}`;
+      note.textContent = o.label;
+      instr.insertAdjacentElement('afterend', note);
+    }
+  }
+
+  closeConflict();
+}
+
+
+// Update progress bar on screen change
+(function() {
+  var _origGoTo = goTo;
+  goTo = function(n) {
+    _origGoTo(n);
+    var fill = document.getElementById('progress-bar-fill');
+    if (fill) fill.style.width = ((n + 1) / total * 100) + '%';
+  };
+})();
+</script>
+</body>
+</html>
